@@ -22,7 +22,7 @@ impl Render {
         (
             Self {
                 canvas: window.into_canvas().build().unwrap(),
-                side: 600,
+                side: 650,
                 v_width: 20,
                 v_length: 40,
             },
@@ -40,12 +40,20 @@ impl Render {
     pub fn draw_grid(&mut self) -> Result<(), String> {
         self.canvas.set_draw_color(Color::WHITE);
         let lines = [
-            (0, 250, 600, 1),
-            (0, 300, 600, 1),
-            (0, 349, 600, 1),
-            (250, 0, 1, 600),
-            (300, 0, 1, 600),
-            (349, 0, 1, 600),
+            (0, 180, 650, 1),
+            (0, 220, 650, 1),
+            (0, 260, 650, 1),
+            (0, 300, 650, 1),
+            (0, 340, 650, 1),
+            (0, 380, 650, 1),
+            (0, 420, 650, 1),
+            (180, 0, 1, 650),
+            (220, 0, 1, 650),
+            (260, 0, 1, 650),
+            (300, 0, 1, 650),
+            (340, 0, 1, 650),
+            (380, 0, 1, 650),
+            (420, 0, 1, 650),
         ];
         for (x, y, width, height) in lines {
             self.canvas.fill_rect(Rect::new(x, y, width, height))?;
