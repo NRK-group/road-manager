@@ -3,9 +3,9 @@ use rand::Rng;
 pub use sdl2::pixels::Color;
 use std::cell::RefCell;
 pub struct Direction {
-    left: Vec<RefCell<Vehicle>>,
-    right: Vec<RefCell<Vehicle>>,
-    straight: Vec<RefCell<Vehicle>>,
+    pub left: Vec<RefCell<Vehicle>>,
+    pub right: Vec<RefCell<Vehicle>>,
+    pub straight: Vec<RefCell<Vehicle>>,
 }
 impl Direction {
     pub fn new() -> Self {

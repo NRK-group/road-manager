@@ -7,6 +7,10 @@ pub fn main() -> Result<(), String> {
     let (renderer, mut event_pump) = Render::new();
     let mut context = Context::new(renderer);
     'running: loop {
+        context.render.canvas.set_draw_color(Color::BLACK);
+        context.render.canvas.clear();
+        // context.render.canvas.present();
+
         for event in event_pump.poll_iter() {
             match event {
                 Event::Quit { .. } => break 'running,
@@ -27,6 +31,7 @@ pub fn main() -> Result<(), String> {
                 _ => {}
             }
         }
+        context.move_vehicles();
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();
