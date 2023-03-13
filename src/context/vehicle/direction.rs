@@ -1,4 +1,4 @@
-use super::{origin::*, Vehicle};
+use super::Vehicle;
 use rand::Rng;
 pub use sdl2::pixels::Color;
 use std::cell::RefCell;

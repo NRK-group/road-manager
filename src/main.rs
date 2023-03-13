@@ -26,12 +26,14 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown {
                     keycode: ARROW_U, ..
                 } => context.c_queue.push_vehicle(Origin::South),
-                Event::KeyDown { keycode: RAND, .. } => {context.c_queue.push_vehicle(Origin::random())}
+                Event::KeyDown { keycode: RAND, .. } => {
+                    context.c_queue.push_vehicle(Origin::random())
+                }
                 Event::KeyDown { keycode: ESC, .. } => break 'running,
                 _ => {}
             }
         }
-        context.move_vehicles();
+        context.move_vehicles()?;
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();

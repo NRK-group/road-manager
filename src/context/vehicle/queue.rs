@@ -1,5 +1,4 @@
 use crate::vehicle::{Origin, Vehicle};
-use std::cell::RefCell;
 
 use super::Direction;
 pub struct Queue {
@@ -8,7 +7,6 @@ pub struct Queue {
     pub south: Direction,
     pub west: Direction,
 }
-
 
 impl Queue {
     pub fn new() -> Self {
@@ -25,7 +23,7 @@ impl Queue {
             Origin::East => self.east.add_vehicle_to_queue(example),
             Origin::West => self.west.add_vehicle_to_queue(example),
             Origin::North => self.north.add_vehicle_to_queue(example),
-            Origin::South =>self.south.add_vehicle_to_queue(example),
+            Origin::South => self.south.add_vehicle_to_queue(example),
         }
     }
 }
