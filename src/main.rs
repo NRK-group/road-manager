@@ -37,7 +37,7 @@ pub fn main() -> Result<(), String> {
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 24));
     }
     Ok(())
 }
