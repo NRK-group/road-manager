@@ -7,10 +7,14 @@ pub use vehicle::*;
 
 pub struct Context {
     pub render: Render,
+    pub c_queue: Queue,
 }
 
 impl Context {
     pub fn new(render: Render) -> Self {
-        Self { render }
+        Self {
+            render,
+            c_queue: Queue::new(),
+        }
     }
 }

@@ -31,7 +31,7 @@ impl Render {
     }
     pub fn draw_vehicle(&mut self, vehicle: &Vehicle) -> Result<(), String> {
         let Point(x, y) = vehicle.point;
-        self.canvas.set_draw_color(vehicle.color);
+        self.canvas.set_draw_color(Color::RED);
         self.canvas
             .fill_rect(Rect::new(x, y, self.v_width, self.v_length))?;
         Ok(())

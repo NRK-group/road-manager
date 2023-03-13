@@ -12,17 +12,17 @@ pub fn main() -> Result<(), String> {
                 Event::Quit { .. } => break 'running,
                 Event::KeyDown {
                     keycode: ARROW_D, ..
-                } => {}
+                } => context.c_queue.push_vehicle(Origin::North),
                 Event::KeyDown {
                     keycode: ARROW_L, ..
-                } => {}
+                } => context.c_queue.push_vehicle(Origin::West),
                 Event::KeyDown {
                     keycode: ARROW_R, ..
-                } => {}
+                } => context.c_queue.push_vehicle(Origin::East),
                 Event::KeyDown {
                     keycode: ARROW_U, ..
-                } => {}
-                Event::KeyDown { keycode: RAND, .. } => {}
+                } => context.c_queue.push_vehicle(Origin::South),
+                Event::KeyDown { keycode: RAND, .. } => {context.c_queue.push_vehicle(Origin::random())}
                 Event::KeyDown { keycode: ESC, .. } => break 'running,
                 _ => {}
             }
