@@ -4,6 +4,8 @@ pub mod direction;
 pub use direction::*;
 pub mod origin;
 pub use origin::*;
+pub mod queue;
+pub use queue::*;
 pub struct Vehicle {
     pub direction: Direction,
     pub origin: Origin,
