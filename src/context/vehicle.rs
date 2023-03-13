@@ -14,10 +14,11 @@ pub struct Vehicle {
 
 impl Vehicle {
     pub fn new(origin: Origin) -> Self {
+        let direction = VehicleDirection::random();
         Self {
             origin: origin.clone(),
-            direction: VehicleDirection::random(),
-            point: Point::new(origin.clone()),
+            direction: direction.clone(),
+            point: Point::new(origin, direction),
         }
     }
 }

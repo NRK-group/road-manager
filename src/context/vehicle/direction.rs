@@ -24,6 +24,7 @@ impl Direction {
         };
     }
 }
+#[derive(Clone)]
 pub enum VehicleDirection {
     Left,
     Straight,
