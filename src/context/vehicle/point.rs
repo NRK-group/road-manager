@@ -26,14 +26,14 @@ impl Point {
                 VehicleDirection::Right => Self(390, 610),
             },
             Origin::West => match direction {
-                VehicleDirection::Left => Self(-40, 270),
-                VehicleDirection::Straight => Self(-40, 230),
-                VehicleDirection::Right => Self(-40, 190),
+                VehicleDirection::Left => Self(-40, 390),
+                VehicleDirection::Straight => Self(-40, 350),
+                VehicleDirection::Right => Self(-40, 310),
             },
             Origin::East => match direction {
-                VehicleDirection::Left => Self(610, 310),
-                VehicleDirection::Straight => Self(610, 350),
-                VehicleDirection::Right => Self(610, 390),
+                VehicleDirection::Left => Self(610, 190),
+                VehicleDirection::Straight => Self(610, 230),
+                VehicleDirection::Right => Self(610, 270),
             },
         }
     }
