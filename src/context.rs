@@ -37,16 +37,6 @@ impl Context {
                 .push_to_vehicle_direction(&mut self.a_queue.west, vehicle),
         }
     }
-    pub fn remove_from_c_queue(
-        &mut self,
-        origin: Origin,
-        direction: VehicleDirection,
-    ) -> RefCell<Vehicle> {
-        self.c_queue.remove_first_in_queue(origin, direction)
-    }
-}
-
-impl Context {
     pub fn move_vehicles(&mut self) -> Result<(), String> {
         let mut turning_queue = TurningQueue::new();
         let mut vehicle_out_of_range = TurningQueue::new();
@@ -76,7 +66,9 @@ impl Context {
         }
 
         if turning_queue.north.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::North, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::North, VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -123,7 +115,9 @@ impl Context {
         }
 
         if turning_queue.south.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::South, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::South, VehicleDirection::Right);
 
             self.turn_right(holder_vehicle);
         }
@@ -170,7 +164,9 @@ impl Context {
         }
 
         if turning_queue.east.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::East, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::East, VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -216,7 +212,9 @@ impl Context {
         }
 
         if turning_queue.west.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::West, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::West, VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
