@@ -18,8 +18,8 @@ impl Queue {
             west: Direction::new(),
         }
     }
-    pub fn push_vehicle(&mut self, origin: Origin) {
-        let example = Vehicle::new(origin.clone());
+    pub fn push_vehicle(&mut self, origin: Origin, id: i32) {
+        let example = Vehicle::new(origin.clone(), id);
         match origin {
             Origin::East => self.east.add_vehicle_to_queue(example),
             Origin::West => self.west.add_vehicle_to_queue(example),

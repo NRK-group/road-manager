@@ -7,15 +7,19 @@ pub use origin::*;
 pub mod queue;
 pub use queue::*;
 pub struct Vehicle {
+    pub id: i32,
+    pub velocity: i32,
     pub direction: VehicleDirection,
     pub origin: Origin,
     pub point: Point,
 }
 
 impl Vehicle {
-    pub fn new(origin: Origin) -> Self {
+    pub fn new(origin: Origin, id: i32) -> Self {
         let direction = VehicleDirection::random();
         Self {
+            id,
+            velocity: 2,
             origin: origin.clone(),
             direction: direction.clone(),
             point: Point::new(origin, direction),
