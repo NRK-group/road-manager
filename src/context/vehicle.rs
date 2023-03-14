@@ -21,6 +21,8 @@ impl Vehicle {
             point: Point::new(origin, direction),
         }
     }
+
+
 }
 
 pub enum VehicleType {

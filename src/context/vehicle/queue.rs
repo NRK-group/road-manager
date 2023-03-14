@@ -27,4 +27,36 @@ impl Queue {
             Origin::South =>self.south.add_vehicle_to_queue(example),
         }
     }
+
+}
+
+
+pub struct TurningQueue {
+    pub north: TurningDirection,
+    pub east: TurningDirection,
+    pub west: TurningDirection,
+    pub south: TurningDirection,
+}
+
+impl TurningQueue {
+    pub fn new() -> Self {
+        Self {
+            north: TurningDirection::new(),
+            east: TurningDirection::new(),
+            west: TurningDirection::new(),
+            south: TurningDirection::new(),
+        }
+    }
+}
+
+pub struct TurningDirection {
+    pub left: bool,
+    pub straight: bool,
+    pub right: bool,
+}
+
+impl TurningDirection {
+    pub fn new() -> Self {
+        Self { left: false, straight: false, right: false }
+    }
 }
