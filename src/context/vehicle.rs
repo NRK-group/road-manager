@@ -15,21 +15,18 @@ pub struct Vehicle {
 }
 
 impl Vehicle {
-    pub fn new(origin: Origin, id: i32) -> Self {
-        let direction = VehicleDirection::random();
+    pub fn new(origin: Origin, direction: &VehicleDirection, id: i32) -> Self {
         Self {
             id,
             velocity: 2,
             origin: origin.clone(),
             direction: direction.clone(),
-            point: Point::new(origin, direction),
+            point: Point::new(origin, direction.clone()),
         }
     }
-
-
 }
 
 pub enum VehicleType {
     Horizontal,
-    Verticle
+    Verticle,
 }

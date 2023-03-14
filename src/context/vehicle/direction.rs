@@ -15,22 +15,9 @@ impl Direction {
             straight: Vec::new(),
         }
     }
-
-    pub fn add_vehicle_to_queue(&mut self, vehicle: Vehicle) {
-        match vehicle.direction {
-            VehicleDirection::Left => self.left.push(RefCell::new(vehicle)),
-            VehicleDirection::Straight => self.straight.push(RefCell::new(vehicle)),
-            VehicleDirection::Right => self.right.push(RefCell::new(vehicle)),
-        };
-    }
-
-    pub fn add_vehicle_to_queue_with_refcell(&mut self, vehicle:  RefCell<Vehicle>) {
+    pub fn add_vehicle_to_queue_with_refcell(&mut self, vehicle: RefCell<Vehicle>) {
         let direction = vehicle.borrow().direction.clone();
-        match direction {
-            VehicleDirection::Left => self.left.push(vehicle),
-            VehicleDirection::Straight => self.straight.push(vehicle),
-            VehicleDirection::Right => self.right.push(vehicle),
-        };
+        direction.push_to_vehicle_direction(self, vehicle)
     }
 }
 #[derive(Clone)]
@@ -48,5 +35,11 @@ impl VehicleDirection {
             _ => Self::Straight,
         }
     }
+    pub fn push_to_vehicle_direction(self, direction: &mut Direction, vehicle: RefCell<Vehicle>) {
+        match self {
+            VehicleDirection::Left => direction.left.push(vehicle),
+            VehicleDirection::Straight => direction.straight.push(vehicle),
+            VehicleDirection::Right => direction.right.push(vehicle),
+        }
+    }
 }
-
