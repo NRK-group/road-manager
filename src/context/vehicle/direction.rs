@@ -1,7 +1,7 @@
 use super::Vehicle;
 use rand::Rng;
 pub use sdl2::pixels::Color;
-use std::cell::RefCell;
+pub use std::cell::RefCell;
 pub struct Direction {
     pub left: Vec<RefCell<Vehicle>>,
     pub right: Vec<RefCell<Vehicle>>,
