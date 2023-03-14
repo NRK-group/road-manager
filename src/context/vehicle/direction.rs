@@ -19,6 +19,16 @@ impl Direction {
         let direction = vehicle.borrow().direction.clone();
         direction.push_to_vehicle_direction(self, vehicle)
     }
+    pub fn remove_first_from_direction(
+        &mut self,
+        vehicle_direction: VehicleDirection,
+    ) -> RefCell<Vehicle> {
+        match vehicle_direction {
+            VehicleDirection::Left => self.left.remove(0),
+            VehicleDirection::Straight => self.straight.remove(0),
+            VehicleDirection::Right => self.right.remove(0),
+        }
+    }
 }
 #[derive(Clone)]
 pub enum VehicleDirection {
