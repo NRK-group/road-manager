@@ -15,10 +15,6 @@ impl Direction {
             straight: Vec::new(),
         }
     }
-    pub fn add_vehicle_to_queue_with_refcell(&mut self, vehicle: RefCell<Vehicle>) {
-        let direction = vehicle.borrow().direction.clone();
-        direction.push_to_vehicle_direction(self, vehicle)
-    }
     pub fn remove_first_from_direction(
         &mut self,
         vehicle_direction: VehicleDirection,

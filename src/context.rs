@@ -21,17 +21,20 @@ impl Context {
     }
     pub fn turn_right(&mut self, vehicle: RefCell<Vehicle>) {
         let origin = vehicle.borrow().origin.clone();
+        let direction = vehicle.borrow().direction.clone();
         match origin {
-            Origin::East => self
-                .a_queue
-                .south
-                .add_vehicle_to_queue_with_refcell(vehicle),
-            Origin::West => self
-                .a_queue
-                .north
-                .add_vehicle_to_queue_with_refcell(vehicle),
-            Origin::North => self.a_queue.east.add_vehicle_to_queue_with_refcell(vehicle),
-            Origin::South => self.a_queue.west.add_vehicle_to_queue_with_refcell(vehicle),
+            Origin::East => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.south, vehicle),
+            Origin::West => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.north, vehicle),
+            Origin::North => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.east, vehicle),
+            Origin::South => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.west, vehicle),
         }
     }
     pub fn remove_from_c_queue(
