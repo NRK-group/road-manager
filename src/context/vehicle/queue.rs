@@ -1,5 +1,4 @@
 use crate::vehicle::{Origin, Vehicle};
-use std::cell::RefCell;
 
 use super::Direction;
 pub struct Queue {

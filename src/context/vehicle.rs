@@ -22,3 +22,8 @@ impl Vehicle {
         }
     }
 }
+
+pub enum VehicleType {
+    Horizontal,
+    Verticle
+}

@@ -18,10 +18,10 @@ pub fn main() -> Result<(), String> {
                     keycode: ARROW_D, ..
                 } => context.c_queue.push_vehicle(Origin::North),
                 Event::KeyDown {
-                    keycode: ARROW_L, ..
+                    keycode: ARROW_R, ..
                 } => context.c_queue.push_vehicle(Origin::West),
                 Event::KeyDown {
-                    keycode: ARROW_R, ..
+                    keycode: ARROW_L, ..
                 } => context.c_queue.push_vehicle(Origin::East),
                 Event::KeyDown {
                     keycode: ARROW_U, ..
@@ -31,11 +31,11 @@ pub fn main() -> Result<(), String> {
                 _ => {}
             }
         }
-        context.move_vehicles();
+        context.move_vehicles()?;
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
     }
     Ok(())
 }
