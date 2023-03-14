@@ -7,20 +7,23 @@ pub use origin::*;
 pub mod queue;
 pub use queue::*;
 pub struct Vehicle {
-    pub direction: Direction,
+    pub direction: VehicleDirection,
     pub origin: Origin,
-    pub color: Color,
     pub point: Point,
 }
 
 impl Vehicle {
     pub fn new(origin: Origin) -> Self {
-        let (direction, color) = Direction::random();
+        let direction = VehicleDirection::random();
         Self {
             origin: origin.clone(),
             direction: direction.clone(),
-            color,
-            point: Point::new(origin.clone()),
+            point: Point::new(origin, direction),
         }
     }
+}
+
+pub enum VehicleType {
+    Horizontal,
+    Verticle
 }

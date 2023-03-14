@@ -29,11 +29,24 @@ impl Render {
             sdl_context.event_pump().unwrap(),
         )
     }
-    pub fn draw_vehicle(&mut self, vehicle: &Vehicle) -> Result<(), String> {
+    pub fn draw_vehicle(
+        &mut self,
+        vehicle: &Vehicle,
+        vehicle_type: VehicleType,
+    ) -> Result<(), String> {
         let Point(x, y) = vehicle.point;
-        self.canvas.set_draw_color(vehicle.color);
-        self.canvas
-            .fill_rect(Rect::new(x, y, self.v_width, self.v_length))?;
+        self.canvas.set_draw_color(Color::RED);
+        match vehicle_type {
+            VehicleType::Horizontal => {
+                self.canvas
+                    .fill_rect(Rect::new(x, y, self.v_length, self.v_width))?;
+            }
+            VehicleType::Verticle => {
+                self.canvas
+                    .fill_rect(Rect::new(x, y, self.v_width, self.v_length))?;
+            }
+        };
+
         Ok(())
     }
 
