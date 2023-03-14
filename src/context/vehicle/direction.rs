@@ -1,7 +1,7 @@
 use super::Vehicle;
 use rand::Rng;
 pub use sdl2::pixels::Color;
-use std::cell::RefCell;
+pub use std::cell::RefCell;
 pub struct Direction {
     pub left: Vec<RefCell<Vehicle>>,
     pub right: Vec<RefCell<Vehicle>>,
@@ -23,6 +23,15 @@ impl Direction {
             VehicleDirection::Right => self.right.push(RefCell::new(vehicle)),
         };
     }
+
+    pub fn add_vehicle_to_queue_with_refcell(&mut self, vehicle:  RefCell<Vehicle>) {
+        let direction = vehicle.borrow().direction.clone();
+        match direction {
+            VehicleDirection::Left => self.left.push(vehicle),
+            VehicleDirection::Straight => self.straight.push(vehicle),
+            VehicleDirection::Right => self.right.push(vehicle),
+        };
+    }
 }
 #[derive(Clone)]
 pub enum VehicleDirection {
@@ -40,3 +49,4 @@ impl VehicleDirection {
         }
     }
 }
+
