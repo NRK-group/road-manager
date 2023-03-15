@@ -31,4 +31,16 @@ impl Origin {
             Origin::South => vehicle_direction.push_to_vehicle_direction(&mut queue.south, vehicle),
         }
     }
+    pub fn get_len_of_queue_from_direction(
+        &self,
+        queue: &Queue,
+        vehicle_direction: &VehicleDirection,
+    ) -> usize {
+        match self {
+            Origin::East => queue.east.get_len_of_direction(vehicle_direction),
+            Origin::West => queue.west.get_len_of_direction(vehicle_direction),
+            Origin::North => queue.north.get_len_of_direction(vehicle_direction),
+            Origin::South => queue.south.get_len_of_direction(vehicle_direction),
+        }
+    }
 }

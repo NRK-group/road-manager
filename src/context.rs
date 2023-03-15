@@ -7,6 +7,7 @@ pub use vehicle::*;
 
 pub struct Context {
     pub render: Render,
+    pub b_queue: Queue,
     pub c_queue: Queue,
     pub a_queue: Queue,
 }
@@ -15,26 +16,37 @@ impl Context {
     pub fn new(render: Render) -> Self {
         Self {
             render,
+            b_queue: Queue::new(),
             c_queue: Queue::new(),
             a_queue: Queue::new(),
         }
     }
     pub fn turn_right(&mut self, vehicle: RefCell<Vehicle>) {
         let origin = vehicle.borrow().origin.clone();
-        let direction = vehicle.borrow().direction.clone();
+        let vehicle_direction = vehicle.borrow().direction.clone();
         match origin {
-            Origin::East => direction
+            Origin::East => vehicle_direction
                 .clone()
                 .push_to_vehicle_direction(&mut self.a_queue.south, vehicle),
-            Origin::West => direction
+            Origin::West => vehicle_direction
                 .clone()
                 .push_to_vehicle_direction(&mut self.a_queue.north, vehicle),
-            Origin::North => direction
+            Origin::North => vehicle_direction
                 .clone()
                 .push_to_vehicle_direction(&mut self.a_queue.east, vehicle),
-            Origin::South => direction
+            Origin::South => vehicle_direction
                 .clone()
                 .push_to_vehicle_direction(&mut self.a_queue.west, vehicle),
+        }
+    }
+    pub fn add_vehicle_to_queue(&mut self, origin: Origin, id: i32) {
+        let vehicle_direction = VehicleDirection::random();
+        if self.c_queue.check_last_vehicle(&origin, &vehicle_direction)
+            && origin.get_len_of_queue_from_direction(&self.b_queue, &vehicle_direction) == 0
+        {
+            self.c_queue.create_vehicle(origin, id, vehicle_direction)
+        } else {
+            self.b_queue.create_vehicle(origin, id, vehicle_direction)
         }
     }
     pub fn move_vehicles(&mut self) -> Result<(), String> {

@@ -25,6 +25,13 @@ impl Direction {
             VehicleDirection::Right => self.right.remove(0),
         }
     }
+    pub fn get_len_of_direction(&self, vehicle_direction: &VehicleDirection) -> usize {
+        match vehicle_direction {
+            VehicleDirection::Left => self.left.len(),
+            VehicleDirection::Straight => self.straight.len(),
+            VehicleDirection::Right => self.right.len(),
+        }
+    }
 }
 #[derive(Clone)]
 pub enum VehicleDirection {

@@ -17,12 +17,9 @@ impl Queue {
             west: Direction::new(),
         }
     }
-    pub fn create_vehicle(&mut self, origin: Origin, id: i32) {
-        let vehicle_direction = VehicleDirection::random();
+    pub fn create_vehicle(&mut self, origin: Origin, id: i32, vehicle_direction: VehicleDirection) {
         let vehicle = RefCell::new(Vehicle::new(origin.clone(), &vehicle_direction, id));
-        if self.check_c_q(&origin, &vehicle_direction) {
-            origin.add_vehicle_to_origin(vehicle_direction, self, vehicle)
-        }
+        origin.add_vehicle_to_origin(vehicle_direction, self, vehicle)
     }
     pub fn remove_first_in_queue(
         &mut self,
@@ -36,7 +33,11 @@ impl Queue {
             Origin::South => self.south.remove_first_from_direction(vehicle_direction),
         }
     }
-    pub fn check_c_q(&self, origin: &Origin, vehicle_direction: &VehicleDirection) -> bool {
+    pub fn check_last_vehicle(
+        &self,
+        origin: &Origin,
+        vehicle_direction: &VehicleDirection,
+    ) -> bool {
         match origin {
             Origin::East => self.check_lane(&self.east, |val| val.point.0 < 560, vehicle_direction),
             Origin::West => self.check_lane(&self.west, |val| val.point.0 > 10, vehicle_direction),
