@@ -21,20 +21,7 @@ impl Queue {
         let vehicle_direction = VehicleDirection::random();
         let vehicle = RefCell::new(Vehicle::new(origin.clone(), &vehicle_direction, id));
         if self.check_c_q(&origin, &vehicle_direction) {
-            match origin {
-                Origin::East => {
-                    vehicle_direction.push_to_vehicle_direction(&mut self.east, vehicle)
-                }
-                Origin::West => {
-                    vehicle_direction.push_to_vehicle_direction(&mut self.west, vehicle)
-                }
-                Origin::North => {
-                    vehicle_direction.push_to_vehicle_direction(&mut self.north, vehicle)
-                }
-                Origin::South => {
-                    vehicle_direction.push_to_vehicle_direction(&mut self.south, vehicle)
-                }
-            }
+            origin.add_vehicle_to_origin(vehicle_direction, self, vehicle)
         }
     }
     pub fn remove_first_in_queue(

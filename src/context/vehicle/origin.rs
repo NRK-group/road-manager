@@ -1,5 +1,6 @@
-
+use super::{Queue, Vehicle, VehicleDirection};
 use rand::Rng;
+use std::cell::RefCell;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Origin {
     North,
@@ -15,6 +16,19 @@ impl Origin {
             2 => Self::South,
             3 => Self::West,
             _ => Self::East,
+        }
+    }
+    pub fn add_vehicle_to_origin(
+        &self,
+        vehicle_direction: VehicleDirection,
+        queue: &mut Queue,
+        vehicle: RefCell<Vehicle>,
+    ) {
+        match self {
+            Origin::East => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
+            Origin::West => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
+            Origin::North => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
+            Origin::South => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
         }
     }
 }
