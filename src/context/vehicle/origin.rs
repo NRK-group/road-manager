@@ -26,9 +26,9 @@ impl Origin {
     ) {
         match self {
             Origin::East => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
-            Origin::West => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
-            Origin::North => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
-            Origin::South => vehicle_direction.push_to_vehicle_direction(&mut queue.east, vehicle),
+            Origin::West => vehicle_direction.push_to_vehicle_direction(&mut queue.west, vehicle),
+            Origin::North => vehicle_direction.push_to_vehicle_direction(&mut queue.north, vehicle),
+            Origin::South => vehicle_direction.push_to_vehicle_direction(&mut queue.south, vehicle),
         }
     }
 }
