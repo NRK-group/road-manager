@@ -19,7 +19,24 @@ impl Context {
             a_queue: Queue::new(),
         }
     }
-
+    pub fn turn_right(&mut self, vehicle: RefCell<Vehicle>) {
+        let origin = vehicle.borrow().origin.clone();
+        let direction = vehicle.borrow().direction.clone();
+        match origin {
+            Origin::East => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.south, vehicle),
+            Origin::West => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.north, vehicle),
+            Origin::North => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.east, vehicle),
+            Origin::South => direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.west, vehicle),
+        }
+    }
     pub fn move_vehicles(&mut self) -> Result<(), String> {
         let mut turning_queue = TurningQueue::new();
         let mut vehicle_out_of_range = TurningQueue::new();
@@ -49,7 +66,9 @@ impl Context {
         }
 
         if turning_queue.north.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::North, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::North, VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -96,7 +115,9 @@ impl Context {
         }
 
         if turning_queue.south.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::South, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::South, VehicleDirection::Right);
 
             self.turn_right(holder_vehicle);
         }
@@ -143,7 +164,9 @@ impl Context {
         }
 
         if turning_queue.east.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::East, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::East, VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -189,7 +212,9 @@ impl Context {
         }
 
         if turning_queue.west.right {
-            let holder_vehicle = self.remove_from_c_queue(Origin::West, VehicleDirection::Right);
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(Origin::West, VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -211,52 +236,5 @@ impl Context {
             }
         }
         Ok(())
-    }
-
-    pub fn turn_right(&mut self, vehicle: RefCell<Vehicle>) {
-        let origin = vehicle.borrow().origin.clone();
-        match origin {
-            Origin::East => self
-                .a_queue
-                .south
-                .add_vehicle_to_queue_with_refcell(vehicle),
-            Origin::West => self
-                .a_queue
-                .north
-                .add_vehicle_to_queue_with_refcell(vehicle),
-            Origin::North => self.a_queue.east.add_vehicle_to_queue_with_refcell(vehicle),
-            Origin::South => self.a_queue.west.add_vehicle_to_queue_with_refcell(vehicle),
-        }
-    }
-
-    pub fn remove_from_c_queue(
-        &mut self,
-        origin: Origin,
-        direction: VehicleDirection,
-    ) -> RefCell<Vehicle> {
-        match origin {
-            Origin::East => match direction {
-                VehicleDirection::Left => self.c_queue.east.left.remove(0),
-                VehicleDirection::Straight => self.c_queue.east.straight.remove(0),
-                VehicleDirection::Right => self.c_queue.east.right.remove(0),
-            },
-            Origin::West => match direction {
-                VehicleDirection::Left => self.c_queue.west.left.remove(0),
-                VehicleDirection::Straight => self.c_queue.west.straight.remove(0),
-                VehicleDirection::Right => self.c_queue.west.right.remove(0),
-            },
-
-            Origin::North => match direction {
-                VehicleDirection::Left => self.c_queue.north.left.remove(0),
-                VehicleDirection::Straight => self.c_queue.north.straight.remove(0),
-                VehicleDirection::Right => self.c_queue.north.right.remove(0),
-            },
-
-            Origin::South => match direction {
-                VehicleDirection::Left => self.c_queue.south.left.remove(0),
-                VehicleDirection::Straight => self.c_queue.south.straight.remove(0),
-                VehicleDirection::Right => self.c_queue.south.right.remove(0),
-            },
-        }
     }
 }
