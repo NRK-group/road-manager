@@ -1,6 +1,6 @@
 use super::Direction;
 use crate::vehicle::{Origin, Vehicle, VehicleDirection};
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell};
 pub struct Queue {
     pub north: Direction,
     pub east: Direction,
@@ -51,98 +51,38 @@ impl Queue {
     }
     pub fn check_c_q(&self, origin: &Origin, vehicle_direction: &VehicleDirection) -> bool {
         match origin {
-            Origin::East => match vehicle_direction {
-                VehicleDirection::Left => {
-                    if let Some(val) = self.east.left.last() {
-                        val.borrow().point.0 < 560
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Straight => {
-                    if let Some(val) = self.east.straight.last() {
-                        val.borrow().point.0 < 560
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Right => {
-                    if let Some(val) = self.east.right.last() {
-                        val.borrow().point.0 < 560
-                    } else {
-                        true
-                    }
-                }
-            },
-            Origin::West => match vehicle_direction {
-                VehicleDirection::Left => {
-                    if let Some(val) = self.west.left.last() {
-                        val.borrow().point.0 > 20
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Straight => {
-                    if let Some(val) = self.west.straight.last() {
-                        val.borrow().point.0 > 20
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Right => {
-                    if let Some(val) = self.west.right.last() {
-                        val.borrow().point.0 > 20
-                    } else {
-                        true
-                    }
-                }
-            },
-            Origin::North => match vehicle_direction {
-                VehicleDirection::Left => {
-                    if let Some(val) = self.north.left.last() {
-                        val.borrow().point.1 > 20
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Straight => {
-                    if let Some(val) = self.north.straight.last() {
-                        val.borrow().point.1 > 20
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Right => {
-                    if let Some(val) = self.north.right.last() {
-                        val.borrow().point.1 > 20
-                    } else {
-                        true
-                    }
-                }
-            },
-            Origin::South => match vehicle_direction {
-                VehicleDirection::Left => {
-                    if let Some(val) = self.south.left.last() {
-                        val.borrow().point.1 < 560
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Straight => {
-                    if let Some(val) = self.south.straight.last() {
-                        val.borrow().point.1 < 560
-                    } else {
-                        true
-                    }
-                }
-                VehicleDirection::Right => {
-                    if let Some(val) = self.south.right.last() {
-                        val.borrow().point.1 < 560
-                    } else {
-                        true
-                    }
-                }
-            },
+            Origin::East => self.check_lane(&self.east, |val| val.point.0 < 560, vehicle_direction),
+            Origin::West => self.check_lane(&self.west, |val| val.point.0 > 10, vehicle_direction),
+            Origin::North => {
+                self.check_lane(&self.north, |val| val.point.1 > 20, vehicle_direction)
+            }
+            Origin::South => {
+                self.check_lane(&self.south, |val| val.point.1 < 560, vehicle_direction)
+            }
+        }
+    }
+    fn check_lane<F>(
+        &self,
+        lane: &Direction,
+        condition: F,
+        vehicle_direction: &VehicleDirection,
+    ) -> bool
+    where
+        F: Fn(&Ref<Vehicle>) -> bool,
+    {
+        match vehicle_direction {
+            VehicleDirection::Left => lane
+                .left
+                .last()
+                .map_or(true, |val| condition(&val.borrow())),
+            VehicleDirection::Straight => lane
+                .straight
+                .last()
+                .map_or(true, |val| condition(&val.borrow())),
+            VehicleDirection::Right => lane
+                .right
+                .last()
+                .map_or(true, |val| condition(&val.borrow())),
         }
     }
 }
