@@ -26,6 +26,27 @@ impl Direction {
             VehicleDirection::Right => self.right.remove(0),
         }
     }
+    pub fn remove_out_of_bounds_vehicles(&mut self) {
+        //Check each lane
+        if let Some(vehicle) = self.right.first() {
+            let points = vehicle.borrow().point;
+            if points.1 > 650 || points.1 < -40 || points.0 < -40 || points.0 > 650 {
+                self.right.remove(0);
+            }
+        };
+        if let Some(vehicle) = self.straight.first() {
+            let points = vehicle.borrow().point;
+            if points.1 > 650 || points.1 < -40 || points.0 < -40 || points.0 > 650 {
+                self.straight.remove(0);
+            }
+        };
+        if let Some(vehicle) = self.left.first() {
+            let points = vehicle.borrow().point;
+            if points.1 > 650 || points.1 < -40 || points.0 < -40 || points.0 > 650 {
+                self.left.remove(0);
+            }
+        };
+    }
 }
 #[derive(Debug, Clone)]
 pub enum VehicleDirection {

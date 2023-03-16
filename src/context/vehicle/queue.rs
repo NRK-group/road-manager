@@ -74,6 +74,7 @@ impl Queue {
                 .map_or(true, |val| condition(&val.borrow())),
         }
     }
+
 }
 
 pub struct TurningQueue {
