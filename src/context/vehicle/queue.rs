@@ -10,6 +10,19 @@ pub struct Queue {
 }
 
 impl Queue {
+    /// Returns a new queue.
+    ///
+    /// # Returns
+    ///
+    /// A new queue.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::queue::Queue;
+    ///
+    /// let queue = Queue::new();
+    /// ```
     pub fn new() -> Self {
         Self {
             north: Direction::new(),
@@ -18,10 +31,52 @@ impl Queue {
             west: Direction::new(),
         }
     }
+    /// Creates a vehicle and adds it to the queue.
+    ///
+    /// # Arguments
+    ///
+    /// * `origin` - The origin of the vehicle.
+    /// * `id` - The id of the vehicle.
+    /// * `vehicle_direction` - The direction of the vehicle.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::origin::Origin;
+    /// use context::vehicle::queue::Queue;
+    /// use context::vehicle::vehicle_direction::VehicleDirection;
+    ///
+    /// let mut queue = Queue::new();
+    ///
+    /// queue.create_vehicle(Origin::North, 1, VehicleDirection::North);
+    /// ```
     pub fn create_vehicle(&mut self, origin: Origin, id: i32, vehicle_direction: VehicleDirection) {
         let vehicle = RefCell::new(Vehicle::new(origin.clone(), &vehicle_direction, id));
         origin.add_vehicle_to_origin(&vehicle_direction, self, vehicle)
     }
+    /// Remove and Returns the first vehicle in the specific queue.
+    ///
+    /// # Arguments
+    ///
+    /// * `origin` - The origin of the vehicle.
+    /// * `vehicle_direction` - The direction of the vehicle.
+    ///
+    /// # Returns
+    ///
+    /// The first vehicle in the queue.
+    ///
+    /// # Examples
+    /// ```
+    /// use context::vehicle::origin::Origin;
+    /// use context::vehicle::queue::Queue;
+    /// use context::vehicle::vehicle_direction::VehicleDirection;
+    ///
+    /// let mut queue = Queue::new();
+    ///
+    /// queue.create_vehicle(Origin::North, 1, VehicleDirection::North);
+    ///
+    /// let vehicle = queue.remove_first_in_queue(&Origin::North, &VehicleDirection::North);
+    /// ```
     pub fn remove_first_in_queue(
         &mut self,
         origin: &Origin,
@@ -34,6 +89,32 @@ impl Queue {
             Origin::South => self.south.remove_first_from_direction(&vehicle_direction),
         }
     }
+    /// Returns bool if the vehicle is safe distance from the last vehicle in specific orgin and direction.
+    ///
+    /// # Arguments
+    ///
+    /// * `origin` - The origin of the vehicle.
+    /// * `vehicle_direction` - The direction of the vehicle.
+    ///
+    /// # Returns
+    ///
+    /// Bool if the vehicle is safe distance from the last vehicle.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::origin::Origin;
+    /// use context::vehicle::queue::Queue;
+    /// use context::vehicle::vehicle_direction::VehicleDirection;
+    ///
+    /// let mut queue = Queue::new();
+    ///
+    /// queue.create_vehicle(Origin::North, 1, VehicleDirection::North);
+    ///
+    /// let is_safe_distance = queue.is_safe_distance_from_last_vehicle(&Origin::North, &VehicleDirection::North);
+    ///
+    /// assert_eq!(is_safe_distance, true);
+    /// ```
     pub fn is_safe_distance_from_last_vehicle(
         &self,
         origin: &Origin,
@@ -50,6 +131,31 @@ impl Queue {
             }
         }
     }
+    /// Returns bool if the vehicle is safe distance from the last vehicle
+    /// 
+    /// # Arguments
+    /// 
+    /// * `lane` - The lane of the vehicle.
+    /// * `condition` - The condition of the vehicle.
+    /// * `vehicle_direction` - The direction of the vehicle.
+    /// 
+    /// # Returns
+    /// 
+    /// Bool if the vehicle is safe distance from the last vehicle.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use context::vehicle::direction::Direction;
+    /// use context::vehicle::queue::Queue;
+    /// use context::vehicle::vehicle_direction::VehicleDirection;
+    /// 
+    /// let mut queue = Queue::new();
+    /// 
+    /// let is_safe_distance = queue.check_lane(&Direction::new(), |val| val.point.0 < 560, &VehicleDirection::North);
+    /// 
+    /// assert_eq!(is_safe_distance, true);
+    /// ```
     fn check_lane<F>(
         &self,
         lane: &Direction,
@@ -75,13 +181,23 @@ impl Queue {
         }
     }
 
+    /// Clear all vehicles that are out of bounds.
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use context::vehicle::queue::Queue;
+    /// 
+    /// let mut queue = Queue::new();
+    /// 
+    /// queue.clear_out_of_bounds();
+    /// ```
     pub fn clear_out_of_bounds(&mut self) {
         self.north.remove_out_of_bounds_vehicles();
         self.south.remove_out_of_bounds_vehicles();
         self.east.remove_out_of_bounds_vehicles();
         self.west.remove_out_of_bounds_vehicles();
     }
-
 }
 
 pub struct TurningQueue {
