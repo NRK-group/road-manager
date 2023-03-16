@@ -132,21 +132,21 @@ impl Context {
         for vehicle in &self.c_queue.north.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-            if current_vehicle.point.1 >= 180 {
-                turning_queue.north.right = true;
-                current_vehicle.point = current_vehicle.point + Point(-10, 10);
-            } else {
+            // if current_vehicle.point.1 >= 180 {
+            //     turning_queue.north.right = true;
+            //     current_vehicle.point = current_vehicle.point + Point(-10, 10);
+            // } else {
                 self.render
                     .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
-            }
+            // }
         }
 
-        if turning_queue.north.right {
-            let holder_vehicle = self
-                .c_queue
-                .remove_first_in_queue(&Origin::North, &VehicleDirection::Right);
-            self.turn_right(holder_vehicle);
-        }
+        // if turning_queue.north.right {
+        //     let holder_vehicle = self
+        //         .c_queue
+        //         .remove_first_in_queue(&Origin::North, &VehicleDirection::Right);
+        //     self.turn_right(holder_vehicle);
+        // }
 
         //North After Queue
         for vehicle in &self.a_queue.north.right {
@@ -335,8 +335,39 @@ impl Context {
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
         self.a_queue.clear_out_of_bounds();
+        self.shift_vehicles_at_turning_point();
 
         Ok(())
+    }
+
+    //Create function that checks if vehicle in c queue is passed the turning point. If so it should shift
+    pub fn shift_vehicles_at_turning_point(&mut self)  {
+        if let Some(v) = self.c_queue.north.right.first() {
+            if v.borrow().turn() {
+                //Shift from c queue to a queue
+                let vehicle_to_shift = self.c_queue.north.right.remove(0);
+                // vehicle_to_shift.point = vehicle_to_shift.point + Point(-10, 10);
+                // let mut v = vehicle_to_shift.borrow_mut();
+                // v.point = v.point + Point(-10, 10);
+
+                self.turn_right(vehicle_to_shift)
+            }
+        }
+        if let Some(v) = self.c_queue.north.straight.first() {
+            if v.borrow().turn() {
+                //Shift from c queue to a queue
+                let vehicle_to_shift = self.c_queue.north.straight.remove(0);
+                self.turn_straight(vehicle_to_shift)
+            }
+        }
+        if let Some(v) = self.c_queue.north.left.first() {
+            if v.borrow().turn() {
+                //Shift from c queue to a queue
+                let vehicle_to_shift = self.c_queue.north.left.remove(0);
+                self.turn_left(vehicle_to_shift)
+            }
+        }
+        
     }
 }
 fn add_vehicle_to_origin_if_safe(
