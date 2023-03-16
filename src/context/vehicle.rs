@@ -6,7 +6,7 @@ pub mod origin;
 pub use origin::*;
 pub mod queue;
 pub use queue::*;
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Vehicle {
     pub id: i32,
     pub velocity: i32,
@@ -29,5 +29,5 @@ impl Vehicle {
 
 pub enum VehicleType {
     Horizontal,
-    Verticle,
+    Vertical,
 }

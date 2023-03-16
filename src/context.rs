@@ -76,13 +76,13 @@ impl Context {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
         }
         for vehicle in &self.c_queue.north.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
         }
         for vehicle in &self.c_queue.north.right {
             let mut current_vehicle = vehicle.borrow_mut();
@@ -92,7 +92,7 @@ impl Context {
                 current_vehicle.point = current_vehicle.point + Point(-10, 10);
             } else {
                 self.render
-                    .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                    .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
             }
         }
 
@@ -113,7 +113,7 @@ impl Context {
                 vehicle_out_of_range.north.right = true;
             }
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
         }
 
         if vehicle_out_of_range.north.right {
@@ -127,19 +127,19 @@ impl Context {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
         }
         for vehicle in &self.c_queue.south.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
         }
         for vehicle in &self.c_queue.south.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
             if current_vehicle.point.1 <= 390 {
                 turning_queue.south.right = true;
             }
@@ -161,7 +161,7 @@ impl Context {
                 vehicle_out_of_range.south.right = true;
             }
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Vertical)?;
         }
 
         if vehicle_out_of_range.south.right {
@@ -175,19 +175,19 @@ impl Context {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Horizontal)?;
         }
         for vehicle in &self.c_queue.east.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Horizontal)?;
         }
         for vehicle in &self.c_queue.east.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Horizontal)?;
             if current_vehicle.point.0 <= 390 {
                 turning_queue.east.right = true;
                 current_vehicle.point = current_vehicle.point + Point(0, -10);
@@ -209,7 +209,7 @@ impl Context {
                 vehicle_out_of_range.east.right = true;
             }
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Horizontal)?;
         }
 
         if vehicle_out_of_range.east.right {
@@ -223,19 +223,19 @@ impl Context {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Horizontal)?;
         }
         for vehicle in &self.c_queue.west.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Horizontal)?;
         }
         for vehicle in &self.c_queue.west.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &VehicleType::Horizontal)?;
             if current_vehicle.point.0 >= 180 {
                 turning_queue.west.right = true;
                 current_vehicle.point = current_vehicle.point + Point(10, 0);
@@ -258,7 +258,7 @@ impl Context {
                 vehicle_out_of_range.west.right = true;
             }
             self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+                .draw_vehicle(&current_vehicle, &&VehicleType::Horizontal)?;
         }
 
         if vehicle_out_of_range.west.right {
@@ -281,4 +281,16 @@ fn add_vehicle_to_origin_if_safe(
         let vehicle = b_queue.remove_first_in_queue(origin, vehicle_direction);
         origin.add_vehicle_to_origin(vehicle_direction, c_queue, vehicle);
     }
+}
+fn move_and_draw_vehicles(
+    vehicles: &Vec<RefCell<Vehicle>>,
+    render: &mut Render,
+    vehicle_type: VehicleType,
+) -> Result<(), String> {
+    for vehicle in vehicles {
+        let mut current_vehicle = vehicle.borrow_mut();
+        current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
+        render.draw_vehicle(&current_vehicle, &vehicle_type)?;
+    }
+    Ok(())
 }
