@@ -6,6 +6,7 @@ pub mod origin;
 pub use origin::*;
 pub mod queue;
 pub use queue::*;
+#[derive(Debug)]
 pub struct Vehicle {
     pub id: i32,
     pub velocity: i32,

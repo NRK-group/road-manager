@@ -20,7 +20,7 @@ impl Origin {
     }
     pub fn add_vehicle_to_origin(
         &self,
-        vehicle_direction: VehicleDirection,
+        vehicle_direction: &VehicleDirection,
         queue: &mut Queue,
         vehicle: RefCell<Vehicle>,
     ) {
@@ -37,10 +37,10 @@ impl Origin {
         vehicle_direction: &VehicleDirection,
     ) -> usize {
         match self {
-            Origin::East => queue.east.get_len_of_direction(vehicle_direction),
-            Origin::West => queue.west.get_len_of_direction(vehicle_direction),
-            Origin::North => queue.north.get_len_of_direction(vehicle_direction),
-            Origin::South => queue.south.get_len_of_direction(vehicle_direction),
+            Origin::East => vehicle_direction.get_len_of_vehicle_direction(&queue.east),
+            Origin::West => vehicle_direction.get_len_of_vehicle_direction(&queue.west),
+            Origin::North => vehicle_direction.get_len_of_vehicle_direction(&queue.north),
+            Origin::South => vehicle_direction.get_len_of_vehicle_direction(&queue.south),
         }
     }
 }

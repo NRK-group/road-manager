@@ -4,7 +4,6 @@ pub mod render;
 pub use render::*;
 pub mod vehicle;
 pub use vehicle::*;
-
 pub struct Context {
     pub render: Render,
     pub b_queue: Queue,
@@ -41,12 +40,32 @@ impl Context {
     }
     pub fn add_vehicle_to_queue(&mut self, origin: Origin, id: i32) {
         let vehicle_direction = VehicleDirection::random();
-        if self.c_queue.check_last_vehicle(&origin, &vehicle_direction)
+        if self
+            .c_queue
+            .is_safe_distance_from_last_vehicle(&origin, &vehicle_direction)
             && origin.get_len_of_queue_from_direction(&self.b_queue, &vehicle_direction) == 0
         {
             self.c_queue.create_vehicle(origin, id, vehicle_direction)
         } else {
             self.b_queue.create_vehicle(origin, id, vehicle_direction)
+        }
+    }
+    pub fn shift_vehicle_from_bq_to_cq(&mut self) {
+        let origins = [Origin::North, Origin::East, Origin::South, Origin::West];
+        let vehicle_directions = [
+            VehicleDirection::Left,
+            VehicleDirection::Right,
+            VehicleDirection::Straight,
+        ];
+        for origin in &origins {
+            for vechicle_direction in &vehicle_directions {
+                add_vehicle_to_origin_if_safe(
+                    origin,
+                    vechicle_direction,
+                    &mut self.c_queue,
+                    &mut self.b_queue,
+                );
+            }
         }
     }
     pub fn move_vehicles(&mut self) -> Result<(), String> {
@@ -80,7 +99,7 @@ impl Context {
         if turning_queue.north.right {
             let holder_vehicle = self
                 .c_queue
-                .remove_first_in_queue(Origin::North, VehicleDirection::Right);
+                .remove_first_in_queue(&Origin::North, &VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -129,7 +148,7 @@ impl Context {
         if turning_queue.south.right {
             let holder_vehicle = self
                 .c_queue
-                .remove_first_in_queue(Origin::South, VehicleDirection::Right);
+                .remove_first_in_queue(&Origin::South, &VehicleDirection::Right);
 
             self.turn_right(holder_vehicle);
         }
@@ -178,7 +197,7 @@ impl Context {
         if turning_queue.east.right {
             let holder_vehicle = self
                 .c_queue
-                .remove_first_in_queue(Origin::East, VehicleDirection::Right);
+                .remove_first_in_queue(&Origin::East, &VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -226,7 +245,7 @@ impl Context {
         if turning_queue.west.right {
             let holder_vehicle = self
                 .c_queue
-                .remove_first_in_queue(Origin::West, VehicleDirection::Right);
+                .remove_first_in_queue(&Origin::West, &VehicleDirection::Right);
             self.turn_right(holder_vehicle);
         }
 
@@ -248,5 +267,18 @@ impl Context {
             }
         }
         Ok(())
+    }
+}
+fn add_vehicle_to_origin_if_safe(
+    origin: &Origin,
+    vehicle_direction: &VehicleDirection,
+    c_queue: &mut Queue,
+    b_queue: &mut Queue,
+) {
+    if c_queue.is_safe_distance_from_last_vehicle(origin, vehicle_direction)
+        && origin.get_len_of_queue_from_direction(b_queue, vehicle_direction) != 0
+    {
+        let vehicle = b_queue.remove_first_in_queue(origin, vehicle_direction);
+        origin.add_vehicle_to_origin(vehicle_direction, c_queue, vehicle);
     }
 }

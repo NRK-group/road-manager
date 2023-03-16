@@ -3,7 +3,7 @@ pub use std::ops::Add;
 
 use super::direction::VehicleDirection;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point(pub i32, pub i32);
 
 impl Add<Point> for Point {
