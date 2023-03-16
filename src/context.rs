@@ -75,7 +75,6 @@ impl Context {
     }
     pub fn move_vehicles(&mut self) -> Result<(), String> {
         let mut turning_queue = TurningQueue::new();
-        let mut vehicle_out_of_range = TurningQueue::new();
         //North current queues
         for vehicle in &self.c_queue.north.left {
             let mut current_vehicle = vehicle.borrow_mut();
@@ -121,18 +120,8 @@ impl Context {
         for vehicle in &self.a_queue.north.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-            //Check if vehicle is out of the screen
-            if current_vehicle.point.1 > 650 {
-                vehicle_out_of_range.north.right = true;
-            }
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
-        }
-
-        if vehicle_out_of_range.north.right {
-            if self.a_queue.north.right.len() > 0 {
-                self.a_queue.north.right.remove(0);
-            }
         }
 
         //South queues
@@ -179,17 +168,9 @@ impl Context {
         for vehicle in &self.a_queue.south.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
-            if current_vehicle.point.1 < -40 {
-                vehicle_out_of_range.south.right = true;
-            }
+           
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
-        }
-
-        if vehicle_out_of_range.south.right {
-            if self.a_queue.south.right.len() > 0 {
-                self.a_queue.south.right.remove(0);
-            }
         }
 
         //East queues
@@ -236,17 +217,8 @@ impl Context {
         for vehicle in &self.a_queue.east.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
-            if current_vehicle.point.0 < -40 {
-                vehicle_out_of_range.east.right = true;
-            }
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
-        }
-
-        if vehicle_out_of_range.east.right {
-            if self.a_queue.east.right.len() > 0 {
-                self.a_queue.east.right.remove(0);
-            }
         }
 
         //West current queues
@@ -294,18 +266,11 @@ impl Context {
         for vehicle in &self.a_queue.west.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
-            if current_vehicle.point.0 > 650 {
-                vehicle_out_of_range.west.right = true;
-            }
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
+        self.a_queue.clear_out_of_bounds();
 
-        if vehicle_out_of_range.west.right {
-            if self.a_queue.west.right.len() > 0 {
-                self.a_queue.west.right.remove(0);
-            }
-        }
         Ok(())
     }
 }

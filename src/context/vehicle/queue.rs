@@ -75,6 +75,13 @@ impl Queue {
         }
     }
 
+    pub fn clear_out_of_bounds(&mut self) {
+        self.north.remove_out_of_bounds_vehicles();
+        self.south.remove_out_of_bounds_vehicles();
+        self.east.remove_out_of_bounds_vehicles();
+        self.west.remove_out_of_bounds_vehicles();
+    }
+
 }
 
 pub struct TurningQueue {
