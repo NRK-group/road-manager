@@ -38,6 +38,26 @@ impl Context {
                 .push_to_vehicle_direction(&mut self.a_queue.west, vehicle),
         }
     }
+
+    pub fn turn_left(&mut self, vehicle: RefCell<Vehicle>) {
+        let origin = vehicle.borrow().origin.clone();
+        let vehicle_direction = vehicle.borrow().direction.clone();
+        match origin {
+            Origin::East => vehicle_direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.north, vehicle),
+            Origin::West => vehicle_direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.south, vehicle),
+            Origin::North => vehicle_direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.west, vehicle),
+            Origin::South => vehicle_direction
+                .clone()
+                .push_to_vehicle_direction(&mut self.a_queue.east, vehicle),
+        }
+    }
+
     pub fn turn_straight(&mut self, vehicle: RefCell<Vehicle>) {
         let origin = vehicle.borrow().origin.clone();
         let vehicle_direction = vehicle.borrow().direction.clone();
@@ -79,9 +99,21 @@ impl Context {
         for vehicle in &self.c_queue.north.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
+            if current_vehicle.point.1 >= 300 {
+                turning_queue.north.left = true
+            }
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
         }
+
+        if turning_queue.north.left {
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(&Origin::North, &VehicleDirection::Left);
+            self.turn_left(holder_vehicle);
+        }
+
+
         for vehicle in &self.c_queue.north.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
@@ -128,9 +160,21 @@ impl Context {
         for vehicle in &self.c_queue.south.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
+            if current_vehicle.point.1 <= 260 {
+                turning_queue.south.left = true
+            }
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
         }
+
+        if turning_queue.south.left {
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(&Origin::South, &VehicleDirection::Left);
+            self.turn_left(holder_vehicle);
+        }
+
+        
         for vehicle in &self.c_queue.south.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
@@ -177,9 +221,20 @@ impl Context {
         for vehicle in &self.c_queue.east.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
+            if current_vehicle.point.0 <= 260 {
+                turning_queue.east.left = true
+            }
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
+
+        if turning_queue.east.left {
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(&Origin::East, &VehicleDirection::Left);
+            self.turn_left(holder_vehicle);
+        }
+
         for vehicle in &self.c_queue.east.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
@@ -225,8 +280,18 @@ impl Context {
         for vehicle in &self.c_queue.west.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
+            if current_vehicle.point.0 >= 300 {
+                turning_queue.west.left = true
+            }
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+        }
+
+        if turning_queue.west.left {
+            let holder_vehicle = self
+                .c_queue
+                .remove_first_in_queue(&Origin::West, &VehicleDirection::Left);
+            self.turn_left(holder_vehicle);
         }
         for vehicle in &self.c_queue.west.straight {
             let mut current_vehicle = vehicle.borrow_mut();
