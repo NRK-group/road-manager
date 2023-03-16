@@ -9,6 +9,19 @@ pub struct Direction {
     pub straight: Vec<RefCell<Vehicle>>,
 }
 impl Direction {
+    /// Returns a new direction.
+    ///
+    /// # Returns
+    ///
+    /// A new direction.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::direction::Direction;
+    ///
+    /// let direction = Direction::new();
+    /// ```
     pub fn new() -> Self {
         Self {
             left: Vec::new(),
@@ -16,6 +29,25 @@ impl Direction {
             straight: Vec::new(),
         }
     }
+    /// Returns the first vehicle in the specified direction.
+    ///
+    /// # Arguments
+    ///
+    /// * `vehicle_direction` - The direction of the vehicles in the queue.
+    ///
+    /// # Returns
+    ///
+    /// The vehicle that get removes in the specified direction.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::direction::Direction;
+    /// use context::vehicle::direction::VehicleDirection;
+    ///
+    /// let mut direction = Direction::new();
+    /// let vehicle = direction.remove_first_from_direction(&VehicleDirection::Left);
+    /// ```
     pub fn remove_first_from_direction(
         &mut self,
         vehicle_direction: &VehicleDirection,
@@ -26,6 +58,16 @@ impl Direction {
             VehicleDirection::Right => self.right.remove(0),
         }
     }
+    /// Remove vehicles that are out of bounds.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::direction::Direction;
+    ///
+    /// let mut direction = Direction::new();
+    /// direction.remove_out_of_bounds_vehicles();
+    /// ```
     pub fn remove_out_of_bounds_vehicles(&mut self) {
         //Check each lane
         if let Some(vehicle) = self.right.first() {
@@ -56,6 +98,19 @@ pub enum VehicleDirection {
 }
 
 impl VehicleDirection {
+    /// Returns a random vehicle direction.
+    ///
+    /// # Returns
+    ///
+    /// A random vehicle direction.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::direction::VehicleDirection;
+    ///
+    /// let vehicle_direction = VehicleDirection::random();
+    /// ```
     pub fn random() -> Self {
         match rand::thread_rng().gen_range(1..=3) {
             1 => Self::Left,
@@ -63,6 +118,26 @@ impl VehicleDirection {
             _ => Self::Straight,
         }
     }
+    /// Pushes a vehicle to the specified vehicle direction.
+    ///
+    /// # Arguments
+    ///     
+    /// * `direction` - The direction of the vehicles in the queue.
+    /// * `vehicle` - The vehicle that will be pushed to the specified direction.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::direction::VehicleDirection;
+    /// use context::vehicle::direction::Direction;
+    /// use context::vehicle::Vehicle;
+    /// use std::cell::RefCell;
+    ///
+    /// let mut direction = Direction::new();
+    /// let vehicle = Vehilce::new(Origin::new(0, 0), &VehicleDirection::Left, 0);
+    ///
+    /// direction.push_to_vehicle_direction(&VehicleDirection::Left, RefCell::new(vehicle));
+    /// ```
     pub fn push_to_vehicle_direction(&self, direction: &mut Direction, vehicle: RefCell<Vehicle>) {
         match self {
             VehicleDirection::Left => direction.left.push(vehicle),
@@ -70,6 +145,28 @@ impl VehicleDirection {
             VehicleDirection::Right => direction.right.push(vehicle),
         }
     }
+
+    /// Returns the length of the specified vehicle direction.
+    ///
+    /// # Arguments
+    ///
+    /// * `direction` - The direction of the vehicles in the queue.
+    ///
+    /// # Returns
+    ///
+    /// The length of the specified vehicle direction.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::direction::VehicleDirection;
+    /// use context::vehicle::direction::Direction;
+    ///
+    /// let vehicle_direction = VehicleDirection::Left;
+    /// let direction = Direction::new();
+    ///
+    /// let len = vehicle_direction.get_len_of_vehicle_direction(&direction);
+    ///
     pub fn get_len_of_vehicle_direction(&self, direction: &Direction) -> usize {
         match self {
             VehicleDirection::Left => direction.left.len(),

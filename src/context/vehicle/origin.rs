@@ -10,6 +10,19 @@ pub enum Origin {
 }
 
 impl Origin {
+    /// Returns a random origin.
+    ///
+    /// # Returns
+    ///
+    /// A random origin.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::origin::Origin;
+    ///
+    /// let origin = Origin::random();
+    /// ```
     pub fn random() -> Self {
         match rand::thread_rng().gen_range(1..=4) {
             1 => Self::North,
@@ -18,6 +31,30 @@ impl Origin {
             _ => Self::East,
         }
     }
+    /// Pushes a vehicle to the queue in the specified direction.
+    ///
+    /// # Arguments
+    ///
+    /// * `vehicle_direction` - The direction of the vehicles in the queue.
+    /// * `queue` - The queue to push the vehicle to.
+    /// * `vehicle` - The vehicle to push to the queue.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::origin::Origin;
+    /// use context::vehicle::queue::Queue;
+    /// use context::vehicle::vehicle_direction::VehicleDirection;
+    /// use context::vehicle::vehicle::Vehicle;
+    /// use std::cell::RefCell;
+    ///
+    /// let origin = Origin::North;
+    /// let mut queue = Queue::new();
+    /// let vehicle_direction = VehicleDirection::North;
+    /// let vehicle = RefCell::new(Vehicle::new());
+    ///     
+    /// origin.add_vehicle_to_origin(&vehicle_direction, &mut queue, vehicle);
+    /// ```
     pub fn add_vehicle_to_origin(
         &self,
         vehicle_direction: &VehicleDirection,
@@ -31,6 +68,30 @@ impl Origin {
             Origin::South => vehicle_direction.push_to_vehicle_direction(&mut queue.south, vehicle),
         }
     }
+    /// Returns the length of the queue in the specified direction.
+    ///
+    /// # Arguments
+    ///
+    /// * `queue` - The queue to return the length of.
+    /// * `vehicle_direction` - The direction of the vehicles in the queue.
+    ///
+    /// # Returns
+    ///
+    /// The length of the queue in the specified direction.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use context::vehicle::origin::Origin;
+    /// use context::vehicle::queue::Queue;
+    /// use context::vehicle::vehicle_direction::VehicleDirection;
+    ///
+    /// let origin = Origin::North;
+    /// let queue = Queue::new();
+    /// let vehicle_direction = VehicleDirection::North;
+    ///
+    /// let len = origin.get_len_of_queue_from_direction(&queue, &vehicle_direction);
+    /// ```
     pub fn get_len_of_queue_from_direction(
         &self,
         queue: &Queue,
