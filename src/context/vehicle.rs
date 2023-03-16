@@ -25,6 +25,32 @@ impl Vehicle {
             point: Point::new(origin, direction.clone()),
         }
     }
+
+    pub fn turn(&self) -> bool {
+        match self.origin {
+            Origin::North => match self.direction {
+                VehicleDirection::Left => self.point.1 >= 300 ,
+                VehicleDirection::Straight => self.point.1 >= 380,
+                VehicleDirection::Right => self.point.1 >= 180,
+            },
+            Origin::East => match self.direction {
+                VehicleDirection::Left => self.point.0 <= 260 ,
+                VehicleDirection::Straight => self.point.0 <= 220,
+                VehicleDirection::Right => self.point.0 <= 390,
+            } ,
+            Origin::West => match self.direction {
+                VehicleDirection::Left => self.point.0 >= 300,
+                VehicleDirection::Straight => self.point.0 >= 340,
+                VehicleDirection::Right => self.point.0 >= 180,
+            } ,
+            Origin::South => match self.direction {
+                VehicleDirection::Left => self.point.1 <= 260 ,
+                VehicleDirection::Straight => self.point.1 <= 220,
+                VehicleDirection::Right => self.point.1 <= 390,
+            },
+
+        }
+    }
 }
 
 pub enum VehicleType {

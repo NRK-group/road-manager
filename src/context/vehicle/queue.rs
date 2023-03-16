@@ -198,6 +198,12 @@ impl Queue {
         self.east.remove_out_of_bounds_vehicles();
         self.west.remove_out_of_bounds_vehicles();
     }
+
+
+    //Create function that checks if vehicle in c queue is passed the turning point. If so it should shift
+    pub fn shift_vehicles_at_turning_point(&mut self, ) {
+
+    }
 }
 
 pub struct TurningQueue {
