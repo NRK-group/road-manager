@@ -2,6 +2,7 @@ use super::Vehicle;
 use rand::Rng;
 pub use sdl2::pixels::Color;
 pub use std::cell::RefCell;
+#[derive(Debug)]
 pub struct Direction {
     pub left: Vec<RefCell<Vehicle>>,
     pub right: Vec<RefCell<Vehicle>>,
@@ -17,7 +18,7 @@ impl Direction {
     }
     pub fn remove_first_from_direction(
         &mut self,
-        vehicle_direction: VehicleDirection,
+        vehicle_direction: &VehicleDirection,
     ) -> RefCell<Vehicle> {
         match vehicle_direction {
             VehicleDirection::Left => self.left.remove(0),
@@ -26,7 +27,7 @@ impl Direction {
         }
     }
 }
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub enum VehicleDirection {
     Left,
     Straight,
@@ -41,11 +42,18 @@ impl VehicleDirection {
             _ => Self::Straight,
         }
     }
-    pub fn push_to_vehicle_direction(self, direction: &mut Direction, vehicle: RefCell<Vehicle>) {
+    pub fn push_to_vehicle_direction(&self, direction: &mut Direction, vehicle: RefCell<Vehicle>) {
         match self {
             VehicleDirection::Left => direction.left.push(vehicle),
             VehicleDirection::Straight => direction.straight.push(vehicle),
             VehicleDirection::Right => direction.right.push(vehicle),
+        }
+    }
+    pub fn get_len_of_vehicle_direction(&self, direction: &Direction) -> usize {
+        match self {
+            VehicleDirection::Left => direction.left.len(),
+            VehicleDirection::Straight => direction.straight.len(),
+            VehicleDirection::Right => direction.right.len(),
         }
     }
 }

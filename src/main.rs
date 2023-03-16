@@ -18,29 +18,29 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown {
                     keycode: ARROW_D, ..
                 } => {
-                    context.c_queue.create_vehicle(Origin::North, vehicle_id);
+                    context.add_vehicle_to_queue(Origin::North, vehicle_id);
                     vehicle_id += 1;
                 }
                 Event::KeyDown {
                     keycode: ARROW_R, ..
                 } => {
-                    context.c_queue.create_vehicle(Origin::West, vehicle_id);
+                    context.add_vehicle_to_queue(Origin::West, vehicle_id);
                     vehicle_id += 1;
                 }
                 Event::KeyDown {
                     keycode: ARROW_L, ..
                 } => {
-                    context.c_queue.create_vehicle(Origin::East, vehicle_id);
+                    context.add_vehicle_to_queue(Origin::East, vehicle_id);
                     vehicle_id += 1;
                 }
                 Event::KeyDown {
                     keycode: ARROW_U, ..
                 } => {
-                    context.c_queue.create_vehicle(Origin::South, vehicle_id);
+                    context.add_vehicle_to_queue(Origin::South, vehicle_id);
                     vehicle_id += 1;
                 }
                 Event::KeyDown { keycode: RAND, .. } => {
-                    context.c_queue.create_vehicle(Origin::random(), vehicle_id);
+                    context.add_vehicle_to_queue(Origin::random(), vehicle_id);
                     vehicle_id += 1;
                 }
                 Event::KeyDown { keycode: ESC, .. } => break 'running,
@@ -48,7 +48,7 @@ pub fn main() -> Result<(), String> {
             }
         }
         context.move_vehicles()?;
-
+        context.shift_vehicle_from_bq_to_cq();
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();
