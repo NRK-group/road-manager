@@ -99,7 +99,7 @@ impl Context {
         for vehicle in &self.c_queue.north.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-            if current_vehicle.point.1 >= 260 {
+            if current_vehicle.point.1 >= 300 {
                 turning_queue.north.left = true
             }
             self.render
@@ -160,7 +160,7 @@ impl Context {
         for vehicle in &self.c_queue.south.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
-            if current_vehicle.point.1 <= 300 {
+            if current_vehicle.point.1 <= 260 {
                 turning_queue.south.left = true
             }
             self.render
@@ -221,7 +221,7 @@ impl Context {
         for vehicle in &self.c_queue.east.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
-            if current_vehicle.point.0 <= 300 {
+            if current_vehicle.point.0 <= 260 {
                 turning_queue.east.left = true
             }
             self.render
@@ -280,7 +280,7 @@ impl Context {
         for vehicle in &self.c_queue.west.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
-            if current_vehicle.point.0 >= 260 {
+            if current_vehicle.point.0 >= 300 {
                 turning_queue.west.left = true
             }
             self.render
