@@ -152,6 +152,9 @@ impl Context {
 
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+            if current_vehicle.point.1 <= 270 {
+                current_vehicle.point = current_vehicle.point + Point(-10, 0);
+            }
         }
 
         for vehicle in &self.c_queue.south.straight {
@@ -239,6 +242,9 @@ impl Context {
 
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+            if current_vehicle.point.0 >= 300 {
+                current_vehicle.point = current_vehicle.point + Point(10, -10);
+            }
         }
 
         for vehicle in &self.c_queue.west.straight {

@@ -34,7 +34,7 @@ impl Vehicle {
                 VehicleDirection::Right => self.point.1 >= 180,
             },
             Origin::East => match self.direction {
-                VehicleDirection::Left => self.point.0 <= 260 ,
+                VehicleDirection::Left => self.point.0 <= 270 ,
                 VehicleDirection::Straight => self.point.0 <= 220,
                 VehicleDirection::Right => self.point.0 <= 390,
             } ,
@@ -44,7 +44,7 @@ impl Vehicle {
                 VehicleDirection::Right => self.point.0 >= 180,
             } ,
             Origin::South => match self.direction {
-                VehicleDirection::Left => self.point.1 <= 260 ,
+                VehicleDirection::Left => self.point.1 <= 270 ,
                 VehicleDirection::Straight => self.point.1 <= 220,
                 VehicleDirection::Right => self.point.1 <= 390,
             },
