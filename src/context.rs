@@ -313,7 +313,7 @@ impl Context {
                 self.turn_left(vehicle_to_shift)
             }
         }
-        
+
         //Shift South
         if let Some(v) = self.c_queue.south.right.first() {
             if v.borrow().turn() {
