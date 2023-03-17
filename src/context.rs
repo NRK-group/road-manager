@@ -291,6 +291,7 @@ impl Context {
 
     //Create function that checks if vehicle in c queue is passed the turning point. If so it should shift
     pub fn shift_vehicles_at_turning_point(&mut self) {
+        //shift North
         if let Some(v) = self.c_queue.north.right.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
@@ -312,6 +313,8 @@ impl Context {
                 self.turn_left(vehicle_to_shift)
             }
         }
+        
+        //Shift South
         if let Some(v) = self.c_queue.south.right.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
@@ -333,6 +336,8 @@ impl Context {
                 self.turn_left(vehicle_to_shift)
             }
         }
+
+        //shift East
         if let Some(v) = self.c_queue.east.right.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
@@ -354,6 +359,8 @@ impl Context {
                 self.turn_left(vehicle_to_shift)
             }
         }
+
+        //Shift West
         if let Some(v) = self.c_queue.west.right.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
