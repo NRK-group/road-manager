@@ -132,28 +132,28 @@ impl Queue {
         }
     }
     /// Returns bool if the vehicle is safe distance from the last vehicle
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `lane` - The lane of the vehicle.
     /// * `condition` - The condition of the vehicle.
     /// * `vehicle_direction` - The direction of the vehicle.
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// Bool if the vehicle is safe distance from the last vehicle.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use context::vehicle::direction::Direction;
     /// use context::vehicle::queue::Queue;
     /// use context::vehicle::vehicle_direction::VehicleDirection;
-    /// 
+    ///
     /// let mut queue = Queue::new();
-    /// 
+    ///
     /// let is_safe_distance = queue.check_lane(&Direction::new(), |val| val.point.0 < 560, &VehicleDirection::North);
-    /// 
+    ///
     /// assert_eq!(is_safe_distance, true);
     /// ```
     fn check_lane<F>(
@@ -182,14 +182,14 @@ impl Queue {
     }
 
     /// Clear all vehicles that are out of bounds.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use context::vehicle::queue::Queue;
-    /// 
+    ///
     /// let mut queue = Queue::new();
-    /// 
+    ///
     /// queue.clear_out_of_bounds();
     /// ```
     pub fn clear_out_of_bounds(&mut self) {
@@ -198,6 +198,7 @@ impl Queue {
         self.east.remove_out_of_bounds_vehicles();
         self.west.remove_out_of_bounds_vehicles();
     }
+
 }
 
 pub struct TurningQueue {
