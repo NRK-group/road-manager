@@ -1,4 +1,6 @@
 mod context;
+use std::fmt::format;
+
 use context::*;
 mod external;
 use external::*;
@@ -41,7 +43,7 @@ pub fn main() -> Result<(), String> {
                     show_simple_message_box(
                         MessageBoxFlag::empty(),
                         "test",
-                        "this is a test testhjvhjvhjvhjvhjv\nhgchgcghcghch\ncghcghcghcghch",
+                        &context.stats.format_stats(),
                         context.render.canvas.window()
                     ).map_err(|e| e.to_string())?;
                     break 'running;

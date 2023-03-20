@@ -18,6 +18,10 @@ impl Statistics {
             close_calls: 0,
         }
     }
+
+    pub fn format_stats(self) -> String {
+        format!("Number of cars: {}\nMax velocity: {}\nMin Velocity: {}\nLongest Car: {}\nSlowest Time: {}\n Close calls: {}", self.max_number, self.max_velocity, self.min_velocity, if self.shortest_time != f32::MAX { self.shortest_time.to_string()} else {"N/A".to_string()}, if self.longest_time != 0.0 { self.longest_time.to_string()} else {"N/A".to_string()}, self.close_calls)
+    }
 }
 
 pub fn stat_times(v: Vec<(f32, f32, f32)>) -> (Option<f32>, Option<f32>) {
@@ -41,7 +45,7 @@ pub fn stat_times(v: Vec<(f32, f32, f32)>) -> (Option<f32>, Option<f32>) {
         if t.2 > h_result {
             h_result = t.2
         }
-        if t.2 < l_result && t.2 > 0.0{
+        if t.2 < l_result && t.2 > 0.0 {
             l_result = t.2
         }
     }
