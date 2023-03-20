@@ -1,5 +1,5 @@
 use super::Direction;
-use crate::vehicle::{Origin, Vehicle, VehicleDirection};
+use crate::{vehicle::{Origin, Vehicle, VehicleDirection}, context::statistics::stat_times};
 use std::cell::{Ref, RefCell};
 #[derive(Debug)]
 pub struct Queue {
@@ -192,11 +192,13 @@ impl Queue {
     ///
     /// queue.clear_out_of_bounds();
     /// ```
-    pub fn clear_out_of_bounds(&mut self) {
-        self.north.remove_out_of_bounds_vehicles();
-        self.south.remove_out_of_bounds_vehicles();
-        self.east.remove_out_of_bounds_vehicles();
-        self.west.remove_out_of_bounds_vehicles();
+    pub fn clear_out_of_bounds(&mut self) -> (Option<f32>, Option<f32>) {
+        let mut checker: Vec<(f32, f32, f32)> = Vec::new();
+        checker.push(self.north.remove_out_of_bounds_vehicles());
+        checker.push(self.south.remove_out_of_bounds_vehicles());
+        checker.push(self.east.remove_out_of_bounds_vehicles());
+        checker.push(self.west.remove_out_of_bounds_vehicles());
+        stat_times(checker)
     }
 
 }

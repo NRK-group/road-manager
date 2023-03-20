@@ -3,14 +3,18 @@ use std::time::Instant;
 
 pub use key::*;
 pub mod render;
+pub mod statistics;
 pub use render::*;
 pub mod vehicle;
 pub use vehicle::*;
+
+use self::statistics::Statistics;
 pub struct Context {
     pub render: Render,
     pub b_queue: Queue,
     pub c_queue: Queue,
     pub a_queue: Queue,
+    pub stats: Statistics,
 }
 
 impl Context {
@@ -20,6 +24,7 @@ impl Context {
             b_queue: Queue::new(),
             c_queue: Queue::new(),
             a_queue: Queue::new(),
+            stats: Statistics::new(),
         }
     }
     pub fn turn_right(&mut self, vehicle: RefCell<Vehicle>) {
@@ -285,7 +290,18 @@ impl Context {
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
-        self.a_queue.clear_out_of_bounds();
+        let times = self.a_queue.clear_out_of_bounds();
+        println!("{:?}", times);
+        if let Some(highest) = times.0 {
+            if highest > self.stats.longest_time {
+                self.stats.longest_time = highest
+            }
+        }
+        if let Some(lowest) = times.1 {
+            if lowest < self.stats.shortest_time {
+                self.stats.shortest_time = lowest
+            }
+        }
         self.shift_vehicles_at_turning_point();
 
         Ok(())
