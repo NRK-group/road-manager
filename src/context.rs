@@ -1,14 +1,20 @@
 pub mod key;
+use std::time::Instant;
+
 pub use key::*;
 pub mod render;
+pub mod statistics;
 pub use render::*;
 pub mod vehicle;
 pub use vehicle::*;
+
+use self::statistics::Statistics;
 pub struct Context {
     pub render: Render,
     pub b_queue: Queue,
     pub c_queue: Queue,
     pub a_queue: Queue,
+    pub stats: Statistics,
 }
 
 impl Context {
@@ -18,6 +24,7 @@ impl Context {
             b_queue: Queue::new(),
             c_queue: Queue::new(),
             a_queue: Queue::new(),
+            stats: Statistics::new(),
         }
     }
     pub fn turn_right(&mut self, vehicle: RefCell<Vehicle>) {
@@ -283,10 +290,25 @@ impl Context {
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
-        self.a_queue.clear_out_of_bounds();
+        
         self.shift_vehicles_at_turning_point();
 
         Ok(())
+    }
+
+    pub fn remove_vehicles(&mut self) {
+        //Update the highest and lowest ties
+        let times = self.a_queue.clear_out_of_bounds();
+        if let Some(highest) = times.0 {
+            if highest > self.stats.longest_time {
+                self.stats.longest_time = highest
+            }
+        }
+        if let Some(lowest) = times.1 {
+            if lowest < self.stats.shortest_time {
+                self.stats.shortest_time = lowest
+            }
+        }
     }
 
     //Create function that checks if vehicle in c queue is passed the turning point. If so it should shift
@@ -313,7 +335,7 @@ impl Context {
                 self.turn_left(vehicle_to_shift)
             }
         }
-        
+
         //Shift South
         if let Some(v) = self.c_queue.south.right.first() {
             if v.borrow().turn() {
@@ -395,6 +417,7 @@ fn add_vehicle_to_origin_if_safe(
         && origin.get_len_of_queue_from_direction(b_queue, vehicle_direction) != 0
     {
         let vehicle = b_queue.remove_first_in_queue(origin, vehicle_direction);
+        vehicle.borrow_mut().start = Instant::now();
         origin.add_vehicle_to_origin(vehicle_direction, c_queue, vehicle);
     }
 }

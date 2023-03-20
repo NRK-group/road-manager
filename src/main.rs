@@ -49,6 +49,7 @@ pub fn main() -> Result<(), String> {
         }
         context.move_vehicles()?;
         context.shift_vehicle_from_bq_to_cq();
+        context.remove_vehicles();
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();

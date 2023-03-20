@@ -68,26 +68,37 @@ impl Direction {
     /// let mut direction = Direction::new();
     /// direction.remove_out_of_bounds_vehicles();
     /// ```
-    pub fn remove_out_of_bounds_vehicles(&mut self) {
+    pub fn remove_out_of_bounds_vehicles(&mut self) -> (f32, f32, f32) {
         //Check each lane
+        let mut r: f32 = -1.0;
+        let mut s: f32 = -1.0;
+        let mut l: f32 = -1.0;
         if let Some(vehicle) = self.right.first() {
             let points = vehicle.borrow().point;
             if points.1 > 650 || points.1 < -40 || points.0 < -40 || points.0 > 650 {
-                self.right.remove(0);
+                r = self.right.remove(0).borrow().start.elapsed().as_secs_f32();
             }
         };
         if let Some(vehicle) = self.straight.first() {
             let points = vehicle.borrow().point;
             if points.1 > 650 || points.1 < -40 || points.0 < -40 || points.0 > 650 {
-                self.straight.remove(0);
+                s = self
+                    .straight
+                    .remove(0)
+                    .borrow()
+                    .start
+                    .elapsed()
+                    .as_secs_f32();
             }
         };
         if let Some(vehicle) = self.left.first() {
             let points = vehicle.borrow().point;
             if points.1 > 650 || points.1 < -40 || points.0 < -40 || points.0 > 650 {
-                self.left.remove(0);
+                l = self.left.remove(0).borrow().start.elapsed().as_secs_f32();
             }
         };
+
+        (l, s, r)
     }
 }
 #[derive(Debug, Clone)]
