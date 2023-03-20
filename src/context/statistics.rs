@@ -14,7 +14,7 @@ impl Statistics {
             max_velocity: 0,
             min_velocity: 0,
             longest_time: 0,
-            shortest_time: 0,
+            shortest_time: i32::MAX,
             close_calls: 0,
         }
     }

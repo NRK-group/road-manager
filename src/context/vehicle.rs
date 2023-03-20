@@ -6,6 +6,7 @@ pub mod origin;
 pub use origin::*;
 pub mod queue;
 pub use queue::*;
+use std::time::Instant;
 #[derive(Debug)]
 pub struct Vehicle {
     pub id: i32,
@@ -13,6 +14,7 @@ pub struct Vehicle {
     pub direction: VehicleDirection,
     pub origin: Origin,
     pub point: Point,
+    pub start: Instant,
 }
 
 impl Vehicle {
@@ -23,6 +25,7 @@ impl Vehicle {
             origin: origin.clone(),
             direction: direction.clone(),
             point: Point::new(origin, direction.clone()),
+            start: Instant::now()
         }
     }
 

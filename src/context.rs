@@ -1,4 +1,6 @@
 pub mod key;
+use std::time::Instant;
+
 pub use key::*;
 pub mod render;
 pub use render::*;
