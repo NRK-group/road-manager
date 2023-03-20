@@ -397,6 +397,7 @@ fn add_vehicle_to_origin_if_safe(
         && origin.get_len_of_queue_from_direction(b_queue, vehicle_direction) != 0
     {
         let vehicle = b_queue.remove_first_in_queue(origin, vehicle_direction);
+        vehicle.borrow_mut().start = Instant::now();
         origin.add_vehicle_to_origin(vehicle_direction, c_queue, vehicle);
     }
 }
