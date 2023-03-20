@@ -290,8 +290,15 @@ impl Context {
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
+        
+        self.shift_vehicles_at_turning_point();
+
+        Ok(())
+    }
+
+    pub fn remove_vehicles(&mut self) {
+        //Update the highest and lowest ties
         let times = self.a_queue.clear_out_of_bounds();
-        println!("{:?}", times);
         if let Some(highest) = times.0 {
             if highest > self.stats.longest_time {
                 self.stats.longest_time = highest
@@ -302,9 +309,6 @@ impl Context {
                 self.stats.shortest_time = lowest
             }
         }
-        self.shift_vehicles_at_turning_point();
-
-        Ok(())
     }
 
     //Create function that checks if vehicle in c queue is passed the turning point. If so it should shift
