@@ -101,7 +101,7 @@ impl Direction {
         (l, s, r)
     }
 }
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum VehicleDirection {
     Left,
     Straight,

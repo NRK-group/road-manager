@@ -21,7 +21,7 @@ impl Vehicle {
     pub fn new(origin: Origin, direction: &VehicleDirection, id: i32) -> Self {
         Self {
             id,
-            velocity: 2,
+            velocity: 1,
             origin: origin.clone(),
             direction: direction.clone(),
             point: Point::new(origin, direction.clone()),
