@@ -8,7 +8,7 @@ use external::*;
 pub fn main() -> Result<(), String> {
     let (renderer, mut event_pump) = Render::new();
     let mut context = Context::new(renderer);
-    let mut vehicle_id = 0;
+    let mut vehicle_id = 1;
     'running: loop {
         context.render.canvas.set_draw_color(Color::BLACK);
         context.render.canvas.clear();
@@ -55,10 +55,12 @@ pub fn main() -> Result<(), String> {
         context.move_vehicles()?;
         context.shift_vehicle_from_bq_to_cq();
         context.remove_vehicles();
+        context.speed_up_fastest();
+        println!("\n{:?}", context.vehicle_ids);
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
+        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 20));
     }
     Ok(())
 }

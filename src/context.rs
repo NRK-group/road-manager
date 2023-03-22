@@ -14,6 +14,8 @@ pub struct Context {
     pub b_queue: Queue,
     pub c_queue: Queue,
     pub a_queue: Queue,
+    pub current_fastest: i32,
+    pub vehicle_ids: Vec<i32>,
     pub stats: Statistics,
 }
 
@@ -24,6 +26,8 @@ impl Context {
             b_queue: Queue::new(),
             c_queue: Queue::new(),
             a_queue: Queue::new(),
+            current_fastest: 0,
+            vehicle_ids: Vec::new(),
             stats: Statistics::new(),
         }
     }
@@ -77,10 +81,14 @@ impl Context {
             .is_safe_distance_from_last_vehicle(&origin, &vehicle_direction)
             && origin.get_len_of_queue_from_direction(&self.b_queue, &vehicle_direction) == 0
         {
+            if vehicle_direction != VehicleDirection::Right {
+                self.vehicle_ids.push(id);
+            }
             self.c_queue.create_vehicle(origin, id, vehicle_direction)
-        } else {
-            self.b_queue.create_vehicle(origin, id, vehicle_direction)
-        }
+        } 
+        // else {
+        //     self.b_queue.create_vehicle(origin, id, vehicle_direction)
+        // }
     }
     pub fn shift_vehicle_from_bq_to_cq(&mut self) {
         let origins = [Origin::North, Origin::East, Origin::South, Origin::West];
@@ -91,12 +99,17 @@ impl Context {
         ];
         for origin in &origins {
             for vechicle_direction in &vehicle_directions {
-                add_vehicle_to_origin_if_safe(
+                let v = add_vehicle_to_origin_if_safe(
                     origin,
                     vechicle_direction,
                     &mut self.c_queue,
                     &mut self.b_queue,
                 );
+                if let Some(i) = v {
+                    if vechicle_direction != &VehicleDirection::Right {
+                        self.vehicle_ids.push(i);
+                    };
+                }
             }
         }
     }
@@ -290,7 +303,7 @@ impl Context {
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
-        
+
         self.shift_vehicles_at_turning_point();
 
         Ok(())
@@ -318,21 +331,23 @@ impl Context {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.north.right.remove(0);
-                self.turn_right(vehicle_to_shift)
+                self.turn_right(vehicle_to_shift);
             }
         }
         if let Some(v) = self.c_queue.north.straight.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.north.straight.remove(0);
-                self.turn_straight(vehicle_to_shift)
+                self.turn_straight(vehicle_to_shift);
+                self.vehicle_ids.remove(0);
             }
         }
         if let Some(v) = self.c_queue.north.left.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.north.left.remove(0);
-                self.turn_left(vehicle_to_shift)
+                self.turn_left(vehicle_to_shift);
+                self.vehicle_ids.remove(0);
             }
         }
 
@@ -341,21 +356,24 @@ impl Context {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.south.right.remove(0);
-                self.turn_right(vehicle_to_shift)
+                self.turn_right(vehicle_to_shift);
             }
         }
         if let Some(v) = self.c_queue.south.straight.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.south.straight.remove(0);
-                self.turn_straight(vehicle_to_shift)
+                self.turn_straight(vehicle_to_shift);
+
+                self.vehicle_ids.remove(0);
             }
         }
         if let Some(v) = self.c_queue.south.left.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.south.left.remove(0);
-                self.turn_left(vehicle_to_shift)
+                self.turn_left(vehicle_to_shift);
+                self.vehicle_ids.remove(0);
             }
         }
 
@@ -364,21 +382,25 @@ impl Context {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.east.right.remove(0);
-                self.turn_right(vehicle_to_shift)
+                self.turn_right(vehicle_to_shift);
             }
         }
         if let Some(v) = self.c_queue.east.straight.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.east.straight.remove(0);
-                self.turn_straight(vehicle_to_shift)
+                self.turn_straight(vehicle_to_shift);
+                self.vehicle_ids.remove(0);
+
             }
         }
         if let Some(v) = self.c_queue.east.left.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.east.left.remove(0);
-                self.turn_left(vehicle_to_shift)
+                self.turn_left(vehicle_to_shift);
+                self.vehicle_ids.remove(0);
+
             }
         }
 
@@ -387,23 +409,100 @@ impl Context {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.west.right.remove(0);
-                self.turn_right(vehicle_to_shift)
+                self.turn_right(vehicle_to_shift);
+
             }
         }
         if let Some(v) = self.c_queue.west.straight.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.west.straight.remove(0);
-                self.turn_straight(vehicle_to_shift)
+                self.turn_straight(vehicle_to_shift);
+                self.vehicle_ids.remove(0);
+
             }
         }
         if let Some(v) = self.c_queue.west.left.first() {
             if v.borrow().turn() {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.west.left.remove(0);
-                self.turn_left(vehicle_to_shift)
+                self.turn_left(vehicle_to_shift);
+                self.vehicle_ids.remove(0);
             }
         }
+    }
+
+    pub fn speed_up_fastest(&mut self) -> bool {
+        if let Some(id) = self.vehicle_ids.first() {
+            if self.current_fastest != *id {
+                //Speed up this car
+                //Check north S
+                if let Some(v) = self.c_queue.north.straight.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    }
+                };
+                //Check north L
+                if let Some(v) = self.c_queue.north.left.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    }
+                };
+                //Check east S
+                if let Some(v) = self.c_queue.east.straight.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    }
+                };
+                //Check; east L
+                if let Some(v) = self.c_queue.east.left.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    }
+                };
+                //Check south S
+                if let Some(v) = self.c_queue.south.straight.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    }
+                };
+                //Check south L
+                if let Some(v) = self.c_queue.south.left.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    }
+                };
+                //Check west S
+                if let Some(v) = self.c_queue.west.straight.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    }
+                };
+                //Check west L
+                if let Some(v) = self.c_queue.west.left.first() {
+                    if v.borrow().id == *id {
+                        v.borrow_mut().velocity = 10;
+                        self.current_fastest = *id;
+                        return true;
+                    };
+                };
+            }
+        };
+        false
     }
 }
 
@@ -412,12 +511,15 @@ fn add_vehicle_to_origin_if_safe(
     vehicle_direction: &VehicleDirection,
     c_queue: &mut Queue,
     b_queue: &mut Queue,
-) {
+) -> Option<i32> {
     if c_queue.is_safe_distance_from_last_vehicle(origin, vehicle_direction)
         && origin.get_len_of_queue_from_direction(b_queue, vehicle_direction) != 0
     {
         let vehicle = b_queue.remove_first_in_queue(origin, vehicle_direction);
         vehicle.borrow_mut().start = Instant::now();
+        let id = vehicle.borrow().id;
         origin.add_vehicle_to_origin(vehicle_direction, c_queue, vehicle);
+        return Some(id);
     }
+    None
 }
