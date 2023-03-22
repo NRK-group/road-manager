@@ -1,5 +1,8 @@
 use super::Direction;
-use crate::{vehicle::{Origin, Vehicle, VehicleDirection}, context::statistics::stat_times};
+use crate::{
+    context::statistics::stat_times,
+    vehicle::{Origin, Vehicle, VehicleDirection},
+};
 use std::cell::{Ref, RefCell};
 #[derive(Debug)]
 pub struct Queue {
@@ -7,6 +10,7 @@ pub struct Queue {
     pub east: Direction,
     pub south: Direction,
     pub west: Direction,
+    pub vehicles: Vec<RefCell<Vehicle>>,
 }
 
 impl Queue {
@@ -29,7 +33,34 @@ impl Queue {
             east: Direction::new(),
             south: Direction::new(),
             west: Direction::new(),
+            vehicles: Vec::new(),
         }
+    }
+    /// Add vehicle to the vehicle queue.
+    ///
+    /// # Arguments
+    /// * `origin` - The origin of the vehicle.
+    /// * `id` - The id of the vehicle.
+    /// * `vehicle_direction` - The direction of the vehicle.
+    ///
+    /// # Examples
+    /// ```
+    /// use context::vehicle::origin::Origin;
+    /// use context::vehicle::queue::Queue;
+    /// use context::vehicle::vehicle_direction::VehicleDirection;
+    ///
+    /// let mut queue = Queue::new();
+    ///
+    /// queue.add_vehicle_to_vehicles_queue(Origin::North, 1, VehicleDirection::North);
+    /// ```
+    pub fn add_vehicle_to_vehicles_queue(
+        &mut self,
+        origin: Origin,
+        id: i32,
+        vehicle_direction: VehicleDirection,
+    ) {
+        let vehicle = RefCell::new(Vehicle::new(origin.clone(), &vehicle_direction, id));
+        self.vehicles.push(vehicle);
     }
     /// Creates a vehicle and adds it to the queue.
     ///
@@ -200,7 +231,6 @@ impl Queue {
         checker.push(self.west.remove_out_of_bounds_vehicles());
         stat_times(checker)
     }
-
 }
 
 pub struct TurningQueue {

@@ -84,8 +84,10 @@ impl Context {
             if vehicle_direction != VehicleDirection::Right {
                 self.vehicle_ids.push(id);
             }
-            self.c_queue.create_vehicle(origin, id, vehicle_direction)
-        } 
+            // self.c_queue.create_vehicle(origin, id, vehicle_direction);
+            self.c_queue
+                .add_vehicle_to_vehicles_queue(origin, id, vehicle_direction)
+        }
         // else {
         //     self.b_queue.create_vehicle(origin, id, vehicle_direction)
         // }
@@ -116,6 +118,59 @@ impl Context {
     pub fn move_vehicles(&mut self) -> Result<(), String> {
         // let mut turning_queue = TurningQueue::new();
         //North current queues
+        for vechile in &self.c_queue.vehicles {
+            let mut current_vehicle = vechile.borrow_mut();
+            //get the vehilce origin
+            let origin = &current_vehicle.origin;
+            // get the vehicle direction
+            let vehicle_direction = &current_vehicle.direction;
+            print!("{:?}", vehicle_direction);
+            if origin == &Origin::North {
+                if vehicle_direction == &VehicleDirection::Straight {
+                    println!("Straight");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("left");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("right");
+                }
+                current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+            } else if origin == &Origin::South {
+                if vehicle_direction == &VehicleDirection::Straight {
+                    println!("Straight");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("left");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("right");
+                }
+                current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+            } else if origin == &Origin::East {
+                if vehicle_direction == &VehicleDirection::Straight {
+                    println!("Straight");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("left");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("right");
+                }
+                current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+            } else if origin == &Origin::West {
+                if vehicle_direction == &VehicleDirection::Straight {
+                    println!("Straight");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("left");
+                } else if vehicle_direction == &VehicleDirection::Left {
+                    println!("right");
+                }
+                current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+            }
+        }
         for vehicle in &self.c_queue.north.left {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
@@ -391,7 +446,6 @@ impl Context {
                 let vehicle_to_shift = self.c_queue.east.straight.remove(0);
                 self.turn_straight(vehicle_to_shift);
                 self.vehicle_ids.remove(0);
-
             }
         }
         if let Some(v) = self.c_queue.east.left.first() {
@@ -400,7 +454,6 @@ impl Context {
                 let vehicle_to_shift = self.c_queue.east.left.remove(0);
                 self.turn_left(vehicle_to_shift);
                 self.vehicle_ids.remove(0);
-
             }
         }
 
@@ -410,7 +463,6 @@ impl Context {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.west.right.remove(0);
                 self.turn_right(vehicle_to_shift);
-
             }
         }
         if let Some(v) = self.c_queue.west.straight.first() {
@@ -419,7 +471,6 @@ impl Context {
                 let vehicle_to_shift = self.c_queue.west.straight.remove(0);
                 self.turn_straight(vehicle_to_shift);
                 self.vehicle_ids.remove(0);
-
             }
         }
         if let Some(v) = self.c_queue.west.left.first() {

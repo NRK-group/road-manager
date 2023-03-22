@@ -19,19 +19,27 @@ pub fn main() -> Result<(), String> {
                 Event::Quit { .. } => {
                     break 'running;
                 }
-                Event::KeyDown { keycode: ARROW_D, .. } => {
+                Event::KeyDown {
+                    keycode: ARROW_D, ..
+                } => {
                     context.add_vehicle_to_queue(Origin::North, vehicle_id);
                     vehicle_id += 1;
                 }
-                Event::KeyDown { keycode: ARROW_R, .. } => {
+                Event::KeyDown {
+                    keycode: ARROW_R, ..
+                } => {
                     context.add_vehicle_to_queue(Origin::West, vehicle_id);
                     vehicle_id += 1;
                 }
-                Event::KeyDown { keycode: ARROW_L, .. } => {
+                Event::KeyDown {
+                    keycode: ARROW_L, ..
+                } => {
                     context.add_vehicle_to_queue(Origin::East, vehicle_id);
                     vehicle_id += 1;
                 }
-                Event::KeyDown { keycode: ARROW_U, .. } => {
+                Event::KeyDown {
+                    keycode: ARROW_U, ..
+                } => {
                     context.add_vehicle_to_queue(Origin::South, vehicle_id);
                     vehicle_id += 1;
                 }
@@ -44,8 +52,9 @@ pub fn main() -> Result<(), String> {
                         MessageBoxFlag::empty(),
                         "test",
                         &context.stats.format_stats(),
-                        context.render.canvas.window()
-                    ).map_err(|e| e.to_string())?;
+                        context.render.canvas.window(),
+                    )
+                    .map_err(|e| e.to_string())?;
                     break 'running;
                 }
 
@@ -56,7 +65,7 @@ pub fn main() -> Result<(), String> {
         context.shift_vehicle_from_bq_to_cq();
         context.remove_vehicles();
         context.speed_up_fastest();
-        println!("\n{:?}", context.vehicle_ids);
+        println!("\n{:?}", context.c_queue.vehicles);
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();
