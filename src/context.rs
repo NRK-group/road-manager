@@ -80,7 +80,7 @@ impl Context {
             .c_queue
             .is_safe_distance_from_last_vehicle(&origin, &vehicle_direction)
             && origin.get_len_of_queue_from_direction(&self.b_queue, &vehicle_direction) == 0
-            && self.vehicle_ids.len() < 8
+            && self.vehicle_ids.len() < 6
         {
             if vehicle_direction != VehicleDirection::Right {
                 self.vehicle_ids.push(id);
