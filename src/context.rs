@@ -9,6 +9,7 @@ pub mod vehicle;
 pub use vehicle::*;
 
 use self::statistics::Statistics;
+#[allow(dead_code)]
 pub struct Context {
     pub render: Render,
     pub b_queue: Queue,
@@ -91,6 +92,7 @@ impl Context {
         //     self.b_queue.create_vehicle(origin, id, vehicle_direction)
         // }
     }
+    #[allow(dead_code)]
     pub fn shift_vehicle_from_bq_to_cq(&mut self) {
         let origins = [Origin::North, Origin::East, Origin::South, Origin::West];
         let vehicle_directions = [
@@ -132,7 +134,7 @@ impl Context {
         for vehicle in &self.c_queue.north.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-            
+
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
         }

@@ -64,14 +64,14 @@ pub fn main() -> Result<(), String> {
             }
         }
         context.move_vehicles()?;
-        context.shift_vehicle_from_bq_to_cq();
+        // context.shift_vehicle_from_bq_to_cq();
         context.remove_vehicles();
         context.speed_up_fastest();
         println!("\n{:?}", context.vehicle_ids);
         // The rest of the game loop goes here...
-        context.render.draw_grid()?;
+        // context.render.draw_grid()?;
         context.render.canvas.present();
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 144));
     }
     Ok(())
 }
