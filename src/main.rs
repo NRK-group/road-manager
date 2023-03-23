@@ -1,5 +1,4 @@
 mod context;
-use std::fmt::format;
 
 use context::*;
 mod external;

@@ -1,5 +1,8 @@
 use super::Direction;
-use crate::{vehicle::{Origin, Vehicle, VehicleDirection}, context::statistics::stat_times};
+use crate::{
+    context::statistics::stat_times,
+    vehicle::{Origin, Vehicle, VehicleDirection},
+};
 use std::cell::{Ref, RefCell};
 #[derive(Debug)]
 pub struct Queue {
@@ -200,16 +203,15 @@ impl Queue {
         checker.push(self.west.remove_out_of_bounds_vehicles());
         stat_times(checker)
     }
-
 }
-
+#[allow(dead_code)]
 pub struct TurningQueue {
     pub north: TurningDirection,
     pub east: TurningDirection,
     pub west: TurningDirection,
     pub south: TurningDirection,
 }
-
+#[allow(dead_code)]
 impl TurningQueue {
     pub fn new() -> Self {
         Self {
@@ -221,12 +223,13 @@ impl TurningQueue {
     }
 }
 
+#[allow(dead_code)]
 pub struct TurningDirection {
     pub left: bool,
     pub straight: bool,
     pub right: bool,
 }
-
+#[allow(dead_code)]
 impl TurningDirection {
     pub fn new() -> Self {
         Self {
