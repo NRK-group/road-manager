@@ -1,5 +1,4 @@
 mod context;
-
 use context::*;
 mod external;
 use external::*;
@@ -7,9 +6,10 @@ use external::*;
 pub fn main() -> Result<(), String> {
     let (renderer, mut event_pump) = Render::new();
     let mut context = Context::new(renderer);
+    let _image_context = sdl2::image::init(InitFlag::PNG | InitFlag::JPG)?;
     let mut vehicle_id = 1;
     'running: loop {
-        context.render.canvas.set_draw_color(Color::BLACK);
+        // context.render.canvas.set_draw_color(Color::BLACK);
         context.render.canvas.clear();
         // context.render.canvas.present();
 
