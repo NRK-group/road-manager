@@ -80,12 +80,13 @@ impl Context {
             .c_queue
             .is_safe_distance_from_last_vehicle(&origin, &vehicle_direction)
             && origin.get_len_of_queue_from_direction(&self.b_queue, &vehicle_direction) == 0
+            && self.vehicle_ids.len() < 8
         {
             if vehicle_direction != VehicleDirection::Right {
                 self.vehicle_ids.push(id);
             }
             self.c_queue.create_vehicle(origin, id, vehicle_direction)
-        } 
+        }
         // else {
         //     self.b_queue.create_vehicle(origin, id, vehicle_direction)
         // }
@@ -391,7 +392,6 @@ impl Context {
                 let vehicle_to_shift = self.c_queue.east.straight.remove(0);
                 self.turn_straight(vehicle_to_shift);
                 self.vehicle_ids.remove(0);
-
             }
         }
         if let Some(v) = self.c_queue.east.left.first() {
@@ -400,7 +400,6 @@ impl Context {
                 let vehicle_to_shift = self.c_queue.east.left.remove(0);
                 self.turn_left(vehicle_to_shift);
                 self.vehicle_ids.remove(0);
-
             }
         }
 
@@ -410,7 +409,6 @@ impl Context {
                 //Shift from c queue to a queue
                 let vehicle_to_shift = self.c_queue.west.right.remove(0);
                 self.turn_right(vehicle_to_shift);
-
             }
         }
         if let Some(v) = self.c_queue.west.straight.first() {
@@ -419,7 +417,6 @@ impl Context {
                 let vehicle_to_shift = self.c_queue.west.straight.remove(0);
                 self.turn_straight(vehicle_to_shift);
                 self.vehicle_ids.remove(0);
-
             }
         }
         if let Some(v) = self.c_queue.west.left.first() {
