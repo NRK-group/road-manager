@@ -7,10 +7,13 @@ pub fn main() -> Result<(), String> {
     let (renderer, mut event_pump) = Render::new();
     let mut context = Context::new(renderer);
     let mut vehicle_id = 1;
+    let texture_creator = context.render.canvas.texture_creator();
+    let texture = texture_creator.load_texture("./road.png")?;
+
     'running: loop {
         context.render.canvas.set_draw_color(Color::BLACK);
         context.render.canvas.clear();
-
+        context.render.canvas.copy(&texture, None, None)?;
         // context.render.canvas.present();
 
         for event in event_pump.poll_iter() {
