@@ -80,7 +80,7 @@ impl Context {
             .c_queue
             .is_safe_distance_from_last_vehicle(&origin, &vehicle_direction)
             && origin.get_len_of_queue_from_direction(&self.b_queue, &vehicle_direction) == 0
-            && self.vehicle_ids.len() < 6
+            && self.vehicle_ids.len() <= 6
         {
             if vehicle_direction != VehicleDirection::Right {
                 self.vehicle_ids.push(id);
@@ -100,16 +100,18 @@ impl Context {
         ];
         for origin in &origins {
             for vechicle_direction in &vehicle_directions {
-                let v = add_vehicle_to_origin_if_safe(
-                    origin,
-                    vechicle_direction,
-                    &mut self.c_queue,
-                    &mut self.b_queue,
-                );
-                if let Some(i) = v {
-                    if vechicle_direction != &VehicleDirection::Right {
-                        self.vehicle_ids.push(i);
-                    };
+                if self.vehicle_ids.len() <= 6 {
+                    let v = add_vehicle_to_origin_if_safe(
+                        origin,
+                        vechicle_direction,
+                        &mut self.c_queue,
+                        &mut self.b_queue,
+                    );
+                    if let Some(i) = v {
+                        if vechicle_direction != &VehicleDirection::Right {
+                            self.vehicle_ids.push(i);
+                        };
+                    }
                 }
             }
         }
