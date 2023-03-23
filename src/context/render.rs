@@ -1,4 +1,5 @@
 use crate::vehicle::*;
+use sdl2::image::LoadTexture;
 use sdl2::pixels::Color;
 use sdl2::render::Canvas;
 use sdl2::EventPump;
@@ -36,14 +37,32 @@ impl Render {
     ) -> Result<(), String> {
         let Point(x, y) = vehicle.point;
         self.canvas.set_draw_color(Color::RED);
+        let origin = &vehicle.origin;
+        let texture_creator = self.canvas.texture_creator();
         match vehicle_type {
             VehicleType::Horizontal => {
-                self.canvas
-                    .fill_rect(Rect::new(x, y, self.v_length, self.v_width))?;
+                let file = if origin == &Origin::East {
+                    "./src/assets/car_right.png"
+                } else {
+                    "./src/assets/car_left.png"
+                };
+                let texture = texture_creator.load_texture(file)?;
+                let dst_rect = Rect::new(x, y, self.v_length, self.v_width);
+                self.canvas.copy(&texture, None, dst_rect)?;
+                // self.canvas
+                //     .fill_rect(Rect::new(x, y, self.v_length, self.v_width))?;
             }
             VehicleType::Verticle => {
-                self.canvas
-                    .fill_rect(Rect::new(x, y, self.v_width, self.v_length))?;
+                let file = if origin == &Origin::North {
+                    "./src/assets/car_down.png"
+                } else {
+                    "./src/assets/car_up.png"
+                };
+                let texture = texture_creator.load_texture(file)?;
+                let dst_rect = Rect::new(x, y, self.v_width, self.v_length);
+                self.canvas.copy(&texture, None, dst_rect)?;
+                // self.canvas
+                //     .fill_rect(Rect::new(x, y, self.v_width, self.v_length))?;
             }
         };
 

@@ -1,5 +1,4 @@
 mod context;
-
 use context::*;
 mod external;
 use external::*;
@@ -8,9 +7,13 @@ pub fn main() -> Result<(), String> {
     let (renderer, mut event_pump) = Render::new();
     let mut context = Context::new(renderer);
     let mut vehicle_id = 1;
+    let texture_creator = context.render.canvas.texture_creator();
+    let texture = texture_creator.load_texture("./src/assets/road.png")?;
+
     'running: loop {
         context.render.canvas.set_draw_color(Color::BLACK);
         context.render.canvas.clear();
+        context.render.canvas.copy(&texture, None, None)?;
         // context.render.canvas.present();
 
         for event in event_pump.poll_iter() {
@@ -68,7 +71,7 @@ pub fn main() -> Result<(), String> {
         // The rest of the game loop goes here...
         context.render.draw_grid()?;
         context.render.canvas.present();
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 20));
+        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
     Ok(())
 }
