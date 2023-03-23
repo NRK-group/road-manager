@@ -132,7 +132,7 @@ impl Context {
         for vehicle in &self.c_queue.north.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-
+            
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
         }
