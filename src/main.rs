@@ -8,7 +8,7 @@ pub fn main() -> Result<(), String> {
     let mut context = Context::new(renderer);
     let mut vehicle_id = 1;
     let texture_creator = context.render.canvas.texture_creator();
-    let texture = texture_creator.load_texture("./road.png")?;
+    let texture = texture_creator.load_texture("./src/assets/road.png")?;
 
     'running: loop {
         context.render.canvas.set_draw_color(Color::BLACK);

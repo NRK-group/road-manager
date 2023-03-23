@@ -42,9 +42,9 @@ impl Render {
         match vehicle_type {
             VehicleType::Horizontal => {
                 let file = if origin == &Origin::East {
-                    "./car_right.png"
+                    "./src/assets/car_right.png"
                 } else {
-                    "./car_left.png"
+                    "./src/assets/car_left.png"
                 };
                 let texture = texture_creator.load_texture(file)?;
                 let dst_rect = Rect::new(x, y, self.v_length, self.v_width);
@@ -54,9 +54,9 @@ impl Render {
             }
             VehicleType::Verticle => {
                 let file = if origin == &Origin::North {
-                    "./car_down.png"
+                    "./src/assets/car_down.png"
                 } else {
-                    "./car_up.png"
+                    "./src/assets/car_up.png"
                 };
                 let texture = texture_creator.load_texture(file)?;
                 let dst_rect = Rect::new(x, y, self.v_width, self.v_length);
