@@ -25,7 +25,7 @@ impl Vehicle {
             velocity: if direction == &VehicleDirection::Right {
                 9
             } else {
-                5
+                1
             },
             origin: origin.clone(),
             direction: direction.clone(),
