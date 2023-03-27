@@ -1,7 +1,7 @@
 use crate::origin::*;
 pub use std::ops::Add;
 
-use super::direction::VehicleDirection;
+use super::{direction::VehicleDirection, Vehicle, VehicleType};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point(pub i32, pub i32);
@@ -54,17 +54,17 @@ impl Point {
     /// let point = Point::new(Origin::North, VehicleDirection::Left);
     ///
     /// assert_eq!(point, Point(270, -40));
-    /// 
+    ///
     /// let point = Point::new(Origin::South, VehicleDirection::Left);
-    /// 
+    ///
     /// assert_eq!(point, Point(310, 610));
-    /// 
+    ///
     /// let point = Point::new(Origin::West, VehicleDirection::Left);
-    /// 
+    ///
     /// assert_eq!(point, Point(-40, 310));
-    /// 
+    ///
     /// let point = Point::new(Origin::East, VehicleDirection::Left);
-    /// 
+    ///
     /// assert_eq!(point, Point(610, 270));
     /// ```
     pub fn new(origin: Origin, direction: VehicleDirection) -> Self {
@@ -90,5 +90,31 @@ impl Point {
                 VehicleDirection::Right => Self(610, 190),
             },
         }
+    }
+
+    pub fn get_bounding_client_rect(self, orientation: VehicleType) -> (i32, i32, i32, i32) {
+        match orientation {
+            VehicleType::Horizontal => (self.0, 40, self.1, 20),
+            VehicleType::Verticle => (self.0, 20, self.1, 40),
+        }
+    }
+
+    pub fn intersect(
+        self,
+        self_orientation: VehicleType,
+        other: Self,
+        other_orientation: VehicleType,
+    ) -> bool {
+        let v_one = self.get_bounding_client_rect(self_orientation);
+        let v_two = other.get_bounding_client_rect(other_orientation);
+
+        if v_one.0 < v_two.0 + v_two.1
+            && v_one.0 + v_one.1 > v_two.0
+            && v_one.2 < v_two.2 + v_two.3
+            && v_one.2 + v_one.3 > v_two.2 {
+                true
+            } else {
+                false
+            }
     }
 }
