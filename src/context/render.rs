@@ -68,7 +68,7 @@ impl Render {
 
         Ok(())
     }
-
+    #[allow(dead_code)]
     pub fn draw_grid(&mut self) -> Result<(), String> {
         self.canvas.set_draw_color(Color::WHITE);
         let lines = [
