@@ -20,7 +20,7 @@ impl Statistics {
     }
 
     pub fn format_stats(self) -> String {
-        format!("Number of cars: {}\nMax velocity: {}\nMin Velocity: {}\nShortest Time: {}\nLongest Time: {}\nClose calls: {}", self.max_number, if self.max_velocity!= 0 { (self.max_velocity).to_string()} else {0.to_string()}, if self.min_velocity!= i32::MAX { self.min_velocity.to_string()} else {0.to_string()}, if self.shortest_time != f32::MAX { ((self.shortest_time*100.0).round()/100.0).to_string()} else {0.to_string()}, if self.longest_time != 0.0 { ((self.longest_time*100.0).round()/100.0).to_string()} else {0.to_string()}, self.close_calls)
+        format!("Number of cars: {}\nMax velocity: {}\nMin Velocity: {}\nShortest Time: {}\nLongest Time: {}\nClose calls: {}\nCollisions: {}", self.max_number, if self.max_velocity!= 0 { (self.max_velocity).to_string()} else {0.to_string()}, if self.min_velocity!= i32::MAX { self.min_velocity.to_string()} else {0.to_string()}, if self.shortest_time != f32::MAX { ((self.shortest_time*100.0).round()/100.0).to_string()} else {0.to_string()}, if self.longest_time != 0.0 { ((self.longest_time*100.0).round()/100.0).to_string()} else {0.to_string()}, self.close_calls, self.close_calls)
     }
 
     pub fn update_velocity(&mut self, v: i32) {
