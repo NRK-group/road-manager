@@ -119,7 +119,6 @@ impl Context {
         }
     }
     pub fn move_vehicles(&mut self) -> Result<(), String> {
-        // let mut turning_queue = TurningQueue::new();
         //North current queues
         for vehicle in &self.c_queue.north.left {
             let mut current_vehicle = vehicle.borrow_mut();
@@ -130,15 +129,12 @@ impl Context {
                 current_vehicle.point = current_vehicle.point + Point(0, 10);
             }
         }
-
         for vehicle in &self.c_queue.north.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
         }
-
         for vehicle in &self.c_queue.north.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
@@ -149,28 +145,18 @@ impl Context {
             }
             self.stats.update_velocity(current_vehicle.velocity);
         }
-
-        //North After Queue
-        for vehicle in &self.a_queue.north.right {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+        for q in &[
+            &self.a_queue.north.right,
+            &self.a_queue.north.straight,
+            &self.a_queue.north.left,
+        ] {
+            for vehicle in q.iter() {
+                let mut current_vehicle = vehicle.borrow_mut();
+                current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+            }
         }
-        for vehicle in &self.a_queue.north.straight {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
-        }
-
-        for vehicle in &self.a_queue.north.left {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(0, current_vehicle.velocity);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
-        }
-
         //South queues
         for vehicle in &self.c_queue.south.left {
             let mut current_vehicle = vehicle.borrow_mut();
@@ -189,7 +175,6 @@ impl Context {
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
         }
-
         for vehicle in &self.c_queue.south.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
@@ -197,27 +182,19 @@ impl Context {
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
             self.stats.update_velocity(current_vehicle.velocity);
         }
-
         //South After Queues
-        for vehicle in &self.a_queue.south.right {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+        for vehicles in &[
+            &self.a_queue.south.right,
+            &self.a_queue.south.straight,
+            &self.a_queue.south.left,
+        ] {
+            for vehicle in vehicles.iter() {
+                let mut current_vehicle = vehicle.borrow_mut();
+                current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+            }
         }
-        for vehicle in &self.a_queue.south.straight {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
-        }
-        for vehicle in &self.a_queue.south.left {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
-        }
-
         //East queues
         for vehicle in &self.c_queue.east.left {
             let mut current_vehicle = vehicle.borrow_mut();
@@ -231,7 +208,6 @@ impl Context {
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
-
         for vehicle in &self.c_queue.east.right {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
@@ -242,27 +218,19 @@ impl Context {
             }
             self.stats.update_velocity(current_vehicle.velocity);
         }
-
         //East After Queues
-        for vehicle in &self.a_queue.east.right {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+        for vehicles in &[
+            &self.a_queue.east.right,
+            &self.a_queue.east.straight,
+            &self.a_queue.east.left,
+        ] {
+            for vehicle in vehicles.iter() {
+                let mut current_vehicle = vehicle.borrow_mut();
+                current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+            }
         }
-        for vehicle in &self.a_queue.east.straight {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
-        }
-        for vehicle in &self.a_queue.east.left {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(-current_vehicle.velocity, 0);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
-        }
-
         //West current queues
         for vehicle in &self.c_queue.west.left {
             let mut current_vehicle = vehicle.borrow_mut();
@@ -274,11 +242,9 @@ impl Context {
                 current_vehicle.point = current_vehicle.point + Point(10, -10);
             }
         }
-
         for vehicle in &self.c_queue.west.straight {
             let mut current_vehicle = vehicle.borrow_mut();
             current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
-
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
         }
@@ -293,28 +259,19 @@ impl Context {
             self.stats.update_velocity(current_vehicle.velocity);
         }
         //West After Queues
-
-        for vehicle in &self.a_queue.west.right {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+        for vehicles in &[
+            &self.a_queue.west.right,
+            &self.a_queue.west.straight,
+            &self.a_queue.west.left,
+        ] {
+            for vehicle in vehicles.iter() {
+                let mut current_vehicle = vehicle.borrow_mut();
+                current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
+                self.render
+                    .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
+            }
         }
-        for vehicle in &self.a_queue.west.straight {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
-        }
-        for vehicle in &self.a_queue.west.left {
-            let mut current_vehicle = vehicle.borrow_mut();
-            current_vehicle.point = current_vehicle.point + Point(current_vehicle.velocity, 0);
-            self.render
-                .draw_vehicle(&current_vehicle, VehicleType::Horizontal)?;
-        }
-
         self.shift_vehicles_at_turning_point();
-
         Ok(())
     }
 
