@@ -52,7 +52,7 @@ pub fn main() -> Result<(), String> {
                 Event::KeyDown { keycode: ESC, .. } => {
                     show_simple_message_box(
                         MessageBoxFlag::empty(),
-                        "test",
+                        "Stats",
                         &context.stats.format_stats(),
                         context.render.canvas.window(),
                     )
@@ -67,7 +67,6 @@ pub fn main() -> Result<(), String> {
         // context.shift_vehicle_from_bq_to_cq();
         context.remove_vehicles();
         context.speed_up_fastest();
-        println!("\n{:?}", context.vehicle_ids);
         // The rest of the game loop goes here...
         // context.render.draw_grid()?;
         context.render.canvas.present();

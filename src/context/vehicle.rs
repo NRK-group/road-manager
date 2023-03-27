@@ -22,7 +22,7 @@ impl Vehicle {
         Self {
             id,
             velocity: if direction == &VehicleDirection::Right {
-                10
+                9
             } else {
                 1
             },
