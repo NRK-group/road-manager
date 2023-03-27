@@ -1,7 +1,7 @@
 use crate::origin::*;
 pub use std::ops::Add;
 
-use super::{direction::VehicleDirection, Vehicle, VehicleType};
+use super::{direction::VehicleDirection, VehicleType};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point(pub i32, pub i32);
@@ -111,10 +111,11 @@ impl Point {
         if v_one.0 < v_two.0 + v_two.1
             && v_one.0 + v_one.1 > v_two.0
             && v_one.2 < v_two.2 + v_two.3
-            && v_one.2 + v_one.3 > v_two.2 {
-                true
-            } else {
-                false
-            }
+            && v_one.2 + v_one.3 > v_two.2
+        {
+            true
+        } else {
+            false
+        }
     }
 }
