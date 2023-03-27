@@ -195,8 +195,8 @@ impl Queue {
     ///
     /// queue.clear_out_of_bounds();
     /// ```
-    pub fn clear_out_of_bounds(&mut self) -> (Option<f32>, Option<f32>) {
-        let mut checker: Vec<(f32, f32, f32)> = Vec::new();
+    pub fn clear_out_of_bounds(&mut self) -> (Option<f32>, Option<f32>, i32) {
+        let mut checker: Vec<(f32, f32, f32, bool)> = Vec::new();
         checker.push(self.north.remove_out_of_bounds_vehicles());
         checker.push(self.south.remove_out_of_bounds_vehicles());
         checker.push(self.east.remove_out_of_bounds_vehicles());

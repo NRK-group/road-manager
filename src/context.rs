@@ -147,6 +147,7 @@ impl Context {
             if current_vehicle.point.1 >= 180 {
                 current_vehicle.point = current_vehicle.point + Point(-10, 10);
             }
+            self.stats.update_velocity(current_vehicle.velocity);
         }
 
         //North After Queue
@@ -194,6 +195,7 @@ impl Context {
             current_vehicle.point = current_vehicle.point + Point(0, -current_vehicle.velocity);
             self.render
                 .draw_vehicle(&current_vehicle, VehicleType::Verticle)?;
+            self.stats.update_velocity(current_vehicle.velocity);
         }
 
         //South After Queues
@@ -238,6 +240,7 @@ impl Context {
             if current_vehicle.point.0 <= 390 {
                 current_vehicle.point = current_vehicle.point + Point(0, -10);
             }
+            self.stats.update_velocity(current_vehicle.velocity);
         }
 
         //East After Queues
@@ -287,6 +290,7 @@ impl Context {
             if current_vehicle.point.0 >= 180 {
                 current_vehicle.point = current_vehicle.point + Point(10, 0);
             }
+            self.stats.update_velocity(current_vehicle.velocity);
         }
         //West After Queues
 
@@ -327,6 +331,8 @@ impl Context {
                 self.stats.shortest_time = lowest
             }
         }
+
+        self.stats.max_number += times.2;
     }
 
     //Create function that checks if vehicle in c queue is passed the turning point. If so it should shift
@@ -433,7 +439,7 @@ impl Context {
         }
     }
 
-    pub fn speed_up_fastest(&mut self) -> bool {
+    pub fn speed_up_fastest(&mut self) {
         if let Some(id) = self.vehicle_ids.first() {
             if self.current_fastest != *id {
                 //Speed up this car
@@ -441,69 +447,76 @@ impl Context {
                 if let Some(v) = self.c_queue.north.straight.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     }
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
                 //Check north L
                 if let Some(v) = self.c_queue.north.left.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     }
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
                 //Check east S
                 if let Some(v) = self.c_queue.east.straight.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     }
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
                 //Check; east L
                 if let Some(v) = self.c_queue.east.left.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     }
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
                 //Check south S
                 if let Some(v) = self.c_queue.south.straight.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     }
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
                 //Check south L
                 if let Some(v) = self.c_queue.south.left.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     }
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
                 //Check west S
                 if let Some(v) = self.c_queue.west.straight.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     }
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
                 //Check west L
                 if let Some(v) = self.c_queue.west.left.first() {
                     if v.borrow().id == *id {
                         v.borrow_mut().velocity = 10;
+
                         self.current_fastest = *id;
-                        return true;
                     };
+                    self.stats.update_velocity(v.borrow().velocity)
                 };
             }
         };
-        false
     }
 }
 
