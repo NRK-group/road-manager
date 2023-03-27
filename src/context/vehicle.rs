@@ -15,6 +15,7 @@ pub struct Vehicle {
     pub origin: Origin,
     pub point: Point,
     pub start: Instant,
+    pub collisions: Vec<i32>
 }
 
 impl Vehicle {
@@ -24,12 +25,13 @@ impl Vehicle {
             velocity: if direction == &VehicleDirection::Right {
                 9
             } else {
-                1
+                5
             },
             origin: origin.clone(),
             direction: direction.clone(),
             point: Point::new(origin, direction.clone()),
             start: Instant::now(),
+            collisions: Vec::new()
         }
     }
 
@@ -58,6 +60,7 @@ impl Vehicle {
         }
     }
 }
+#[derive(Clone, Copy)]
 
 pub enum VehicleType {
     Horizontal,

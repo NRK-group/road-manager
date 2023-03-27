@@ -518,6 +518,112 @@ impl Context {
             }
         };
     }
+
+    pub fn check_collisions(&self) -> i32 {
+        let mut result = 0;
+        //Check north straight
+        for lanes in [
+            (
+                &self.a_queue.north.straight,
+                &self.c_queue.west.left,
+                &self.c_queue.west.straight,
+                VehicleType::Verticle,
+                VehicleType::Horizontal,
+            ),
+            (
+                &self.a_queue.north.left,
+                &self.c_queue.west.left,
+                &self.c_queue.west.straight,
+                VehicleType::Verticle,
+                VehicleType::Horizontal,
+            ),
+            (
+                &self.a_queue.south.straight,
+                &self.c_queue.east.left,
+                &self.c_queue.east.straight,
+                VehicleType::Verticle,
+                VehicleType::Horizontal,
+            ),
+            (
+                &self.a_queue.south.left,
+                &self.c_queue.east.left,
+                &self.c_queue.east.straight,
+                VehicleType::Verticle,
+                VehicleType::Horizontal,
+            ),
+            (
+                &self.a_queue.east.straight,
+                &self.c_queue.north.left,
+                &self.c_queue.north.straight,
+                VehicleType::Horizontal,
+                VehicleType::Verticle,
+            ),
+            (
+                &self.a_queue.east.left,
+                &self.c_queue.north.left,
+                &self.c_queue.north.straight,
+                VehicleType::Horizontal,
+                VehicleType::Verticle,
+            ),
+            (
+                &self.a_queue.west.straight,
+                &self.c_queue.south.left,
+                &self.c_queue.south.straight,
+                VehicleType::Horizontal,
+                VehicleType::Verticle,
+            ),
+            (
+                &self.a_queue.west.left,
+                &self.c_queue.south.left,
+                &self.c_queue.south.straight,
+                VehicleType::Horizontal,
+                VehicleType::Verticle,
+            ),
+        ] {
+            for v in lanes.0 {
+                result += lanes
+                    .1
+                    .iter()
+                    .filter(|&v_two| {
+                        if !v.borrow().collisions.contains(&(v_two.borrow().id)) {
+                            if v.borrow()
+                                .point
+                                .intersect(lanes.3, v_two.borrow().point, lanes.4)
+                            {
+                                v.borrow_mut().collisions.push(v_two.borrow().id);
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    })
+                    .count()
+                    + lanes
+                        .2
+                        .iter()
+                        .filter(|&v_two| {
+                            if !v.borrow().collisions.contains(&(v_two.borrow().id)) {
+                                if v.borrow().point.intersect(
+                                    lanes.3,
+                                    v_two.borrow().point,
+                                    lanes.4,
+                                ) {
+                                    v.borrow_mut().collisions.push(v_two.borrow().id);
+                                    true
+                                } else {
+                                    false
+                                }
+                            } else {
+                                false
+                            }
+                        })
+                        .count();
+            }
+        }
+        result as i32
+    }
 }
 
 fn add_vehicle_to_origin_if_safe(
